@@ -1,0 +1,79 @@
+[build-system]
+# The native extension module `texplitter._native` is compiled from the
+# Rust crate `texplitter_rs/` and ships as package data inside the
+# `texplitter` wheel. maturin handles the Rust build + the Python mixed
+# layout (source in `src/texplitter/`, extension installed alongside).
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "texplitter"
+version = "0.1.0a0"
+description = "Rust-backed text segmentation for AI pipelines — tokenize HTML/XML with customizable regex rules, build segment trees, extract translatable content with placeholders"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [
+    { name = "Alex Martínez Corrià" },
+]
+keywords = [
+    "translation", "segmentation", "html", "xml",
+    "tokenizer", "localization", "nlp", "rust",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Text Processing :: Markup :: XML",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Rust",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+# The core library is Rust-backed via `texplitter._native` and has no
+# runtime Python dependencies of its own.
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+config-editor = [
+    "fastapi",
+    "uvicorn[standard]",
+    "requests",
+]
+docs = [
+    "mkdocs-material",
+    "pymdown-extensions",
+]
+
+[project.urls]
+Homepage = "https://github.com/texplitter/texplitter"
+Documentation = "https://texplitter.github.io/texplitter/"
+Repository = "https://github.com/texplitter/texplitter"
+Changelog = "https://github.com/texplitter/texplitter/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/texplitter/texplitter/issues"
+
+[project.scripts]
+texplitter = "texplitter.__main__:main"
+
+[tool.maturin]
+# Mixed layout: Python sources live in `src/texplitter/`, the Rust crate
+# that produces the `_native` extension lives in `texplitter_rs/`.
+python-source = "src"
+module-name = "texplitter._native"
+manifest-path = "texplitter_rs/Cargo.toml"
+features = ["pyo3/extension-module", "python"]
+# Ship every packaged ruleset inside the wheel so importlib.resources can
+# find them. Rulesets live under `texplitter/config/rules/` — one `.json`
+# file per ruleset. See `texplitter.parserrules.load_regex_patterns`.
+include = [
+    { path = "src/texplitter/config/rules/*.json", format = "sdist" },
+    { path = "src/texplitter/config/rules/*.json", format = "wheel" },
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

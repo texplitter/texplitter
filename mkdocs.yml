@@ -1,0 +1,48 @@
+site_name: texplitter
+site_url: https://texplitter.github.io/texplitter/
+site_description: Rust-backed text segmentation for AI pipelines
+site_author: Alex Martinez Corria
+repo_url: https://github.com/texplitter/texplitter
+repo_name: texplitter/texplitter
+
+theme:
+  name: material
+  logo: assets/texplitter_b.svg
+  favicon: assets/texplitter_b.svg
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - admonition
+  - pymdownx.details
+  - toc:
+      permalink: true
+  - attr_list
+  - def_list
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Concepts: concepts.md
+  - Custom Rulesets: custom-rulesets.md
+  - Config Editor: config-editor.md
+  - API Reference: api-reference.md
+  - Changelog: changelog.md

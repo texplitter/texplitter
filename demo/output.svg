@@ -1,0 +1,342 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="4151.8" height="1350" viewBox="0 0 4151.8 1350">
+  <defs>
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400&amp;display=swap');
+        text {
+            font-family: 'Inconsolata', monospace;
+            font-size: 12px;
+        }
+        </style>
+  </defs>
+  <g id="node0">
+    <rect x="2047.0" y="10" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2056.4" y="35" fill="black">BINARY</text>
+    <text x="2057.0" y="50" fill="blue">.</text>
+  </g>
+  <line x1="2075.0" y1="60" x2="100.0" y2="90" stroke="black"/>
+  <g id="node1">
+    <rect x="10.0" y="90" width="181.20000000000002" height="50" fill="white" stroke="black"/>
+    <text x="62.8" y="115" fill="black">TRANSLATABLE</text>
+    <text x="20.0" y="130" fill="blue">This is the first sentence</text>
+  </g>
+  <line x1="2075.0" y1="60" x2="2176.2" y2="90" stroke="black"/>
+  <g id="node2">
+    <rect x="2148.2" y="90" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2157.6" y="115" fill="black">BINARY</text>
+    <text x="2158.2" y="130" fill="blue">.</text>
+  </g>
+  <line x1="2176.2" y1="140" x2="304.1999999999998" y2="170" stroke="black"/>
+  <g id="node3">
+    <rect x="211.19999999999982" y="170" width="187.4" height="50" fill="white" stroke="black"/>
+    <text x="266.99999999999983" y="195" fill="black">TRANSLATABLE</text>
+    <text x="221.19999999999982" y="210" fill="blue">This is the second sentence</text>
+  </g>
+  <line x1="2176.2" y1="140" x2="2279.6" y2="170" stroke="black"/>
+  <g id="node4">
+    <rect x="2251.6" y="170" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2261.0" y="195" fill="black">BINARY</text>
+    <text x="2261.6" y="210" fill="blue">:</text>
+  </g>
+  <line x1="2279.6" y1="220" x2="514.5999999999999" y2="250" stroke="black"/>
+  <g id="node5">
+    <rect x="418.5999999999999" y="250" width="193.6" height="65" fill="white" stroke="black"/>
+    <text x="477.3999999999999" y="275" fill="black">TRANSLATABLE</text>
+    <text x="428.5999999999999" y="290" fill="blue">The tasks that I must finish</text>
+    <text x="428.5999999999999" y="305" fill="blue">today are</text>
+  </g>
+  <line x1="2279.6" y1="220" x2="2386.2" y2="250" stroke="black"/>
+  <g id="node6">
+    <rect x="2358.2" y="250" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2367.6" y="275" fill="black">BINARY</text>
+    <text x="2368.2" y="290" fill="blue">&lt;br /&gt;</text>
+  </g>
+  <line x1="2386.2" y1="300" x2="719.1999999999998" y2="330" stroke="black"/>
+  <g id="node7">
+    <rect x="632.1999999999998" y="330" width="175.0" height="65" fill="white" stroke="black"/>
+    <text x="681.9999999999998" y="355" fill="black">TRANSLATABLE</text>
+    <text x="642.1999999999998" y="370" fill="blue">Prepare texplitter</text>
+    <text x="642.1999999999998" y="385" fill="blue">segmentation presentation</text>
+  </g>
+  <line x1="2386.2" y1="300" x2="2484.2" y2="330" stroke="black"/>
+  <g id="node8">
+    <rect x="2456.2" y="330" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2465.6" y="355" fill="black">BINARY</text>
+    <text x="2466.2" y="370" fill="blue">&lt;br /&gt;</text>
+  </g>
+  <line x1="2484.2" y1="380" x2="911.1999999999998" y2="410" stroke="black"/>
+  <g id="node9">
+    <rect x="827.1999999999998" y="410" width="168.8" height="50" fill="white" stroke="black"/>
+    <text x="873.9999999999998" y="435" fill="black">TRANSLATABLE</text>
+    <text x="837.1999999999998" y="450" fill="blue">Fix some bugs in my code</text>
+  </g>
+  <line x1="2484.2" y1="380" x2="2578.0" y2="410" stroke="black"/>
+  <g id="node10">
+    <rect x="2550.0" y="410" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2559.4" y="435" fill="black">BINARY</text>
+    <text x="2560.0" y="450" fill="blue">.</text>
+  </g>
+  <line x1="2578.0" y1="460" x2="1063.0" y2="490" stroke="black"/>
+  <g id="node11">
+    <rect x="1016.0" y="490" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="1025.8" y="515" fill="black">TRANSLATABLE</text>
+    <text x="1026.0" y="530" fill="blue">Go shopping</text>
+  </g>
+  <line x1="2578.0" y1="460" x2="2635.4" y2="490" stroke="black"/>
+  <g id="node12">
+    <rect x="2607.4" y="490" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2616.8" y="515" fill="black">BINARY</text>
+    <text x="2617.4" y="530" fill="blue">.</text>
+  </g>
+  <line x1="2635.4" y1="540" x2="1403.4" y2="570" stroke="black"/>
+  <g id="node13">
+    <rect x="1369.4" y="570" width="69.6" height="50" fill="lightyellow" stroke="black"/>
+    <text x="1378.6000000000001" y="595" fill="black">MULTIPLE</text>
+    <text x="1379.4" y="610" fill="blue">EMPTY</text>
+  </g>
+  <line x1="1403.4" y1="620" x2="1223.4" y2="650" stroke="black"/>
+  <g id="node14">
+    <rect x="1130.4" y="650" width="187.4" height="65" fill="white" stroke="black"/>
+    <text x="1186.2" y="675" fill="black">TRANSLATABLE</text>
+    <text x="1140.4" y="690" fill="blue">This is the presentation of</text>
+    <text x="1140.4" y="705" fill="blue">the</text>
+  </g>
+  <line x1="1403.4" y1="620" x2="1405.8000000000002" y2="650" stroke="black"/>
+  <g id="node15">
+    <rect x="1337.8000000000002" y="650" width="137.8" height="80" fill="lightblue" stroke="black"/>
+    <text x="1387.2000000000003" y="675" fill="black">SINGLE</text>
+    <text x="1347.8000000000002" y="690" fill="blue">strong</text>
+    <text x="1347.8000000000002" y="705" fill="red">strong/attrone~0: a</text>
+    <text x="1347.8000000000002" y="720" fill="red">strong/attrtwo~0: b</text>
+  </g>
+  <line x1="1405.8000000000002" y1="730" x2="1405.8000000000002" y2="760" stroke="black"/>
+  <g id="node16">
+    <rect x="1358.8000000000002" y="760" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="1368.6000000000001" y="785" fill="black">TRANSLATABLE</text>
+    <text x="1368.8000000000002" y="800" fill="blue">texplitter</text>
+  </g>
+  <line x1="1403.4" y1="620" x2="1585.6000000000001" y2="650" stroke="black"/>
+  <g id="node17">
+    <rect x="1495.6000000000001" y="650" width="181.20000000000002" height="50" fill="white" stroke="black"/>
+    <text x="1548.4" y="675" fill="black">TRANSLATABLE</text>
+    <text x="1505.6000000000001" y="690" fill="blue">segmentation functionality</text>
+  </g>
+  <line x1="2635.4" y1="540" x2="2918.8" y2="570" stroke="black"/>
+  <g id="node18">
+    <rect x="2890.8" y="570" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2900.2000000000003" y="595" fill="black">BINARY</text>
+    <text x="2900.8" y="610" fill="blue">.</text>
+  </g>
+  <line x1="2918.8" y1="620" x2="1799.8000000000002" y2="650" stroke="black"/>
+  <g id="node19">
+    <rect x="1696.8000000000002" y="650" width="206.0" height="50" fill="white" stroke="black"/>
+    <text x="1762.6000000000001" y="675" fill="black">TRANSLATABLE</text>
+    <text x="1706.8000000000002" y="690" fill="blue">I hope you will be enjoying it</text>
+  </g>
+  <line x1="2918.8" y1="620" x2="3031.8" y2="650" stroke="black"/>
+  <g id="node20">
+    <rect x="3003.8" y="650" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3013.2000000000003" y="675" fill="black">BINARY</text>
+    <text x="3013.8" y="690" fill="blue">.</text>
+  </g>
+  <line x1="3031.8" y1="700" x2="2009.8000000000002" y2="730" stroke="black"/>
+  <g id="node21">
+    <rect x="1922.8000000000002" y="730" width="175.0" height="50" fill="white" stroke="black"/>
+    <text x="1972.6000000000001" y="755" fill="black">TRANSLATABLE</text>
+    <text x="1932.8000000000002" y="770" fill="blue">Ms. Mary has been a saver</text>
+  </g>
+  <line x1="3031.8" y1="700" x2="3129.8" y2="730" stroke="black"/>
+  <g id="node22">
+    <rect x="3101.8" y="730" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3111.2000000000003" y="755" fill="black">BINARY</text>
+    <text x="3111.8" y="770" fill="blue">.</text>
+  </g>
+  <line x1="3129.8" y1="780" x2="2210.8" y2="810" stroke="black"/>
+  <g id="node23">
+    <rect x="2117.8" y="810" width="187.4" height="80" fill="white" stroke="black"/>
+    <text x="2173.6000000000004" y="835" fill="black">TRANSLATABLE</text>
+    <text x="2127.8" y="850" fill="blue">She had the following</text>
+    <text x="2127.8" y="865" fill="blue">principles when it comes to</text>
+    <text x="2127.8" y="880" fill="blue">conservation</text>
+  </g>
+  <line x1="3129.8" y1="780" x2="3233.2000000000003" y2="810" stroke="black"/>
+  <g id="node24">
+    <rect x="3205.2000000000003" y="810" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3214.6000000000004" y="835" fill="black">BINARY</text>
+    <text x="3215.2000000000003" y="850" fill="blue">.</text>
+  </g>
+  <line x1="3233.2000000000003" y1="860" x2="2857.2000000000003" y2="890" stroke="black"/>
+  <g id="node25">
+    <rect x="2823.2000000000003" y="890" width="69.6" height="50" fill="lightyellow" stroke="black"/>
+    <text x="2832.4" y="915" fill="black">MULTIPLE</text>
+    <text x="2833.2000000000003" y="930" fill="blue">EMPTY</text>
+  </g>
+  <line x1="2857.2000000000003" y1="940" x2="2350.2000000000003" y2="970" stroke="black"/>
+  <g id="node26">
+    <rect x="2325.2000000000003" y="970" width="51.0" height="50" fill="white" stroke="black"/>
+    <text x="2334.7000000000003" y="995" fill="black">DUMMY</text>
+    <text x="2335.2000000000003" y="1010" fill="blue">EMPTY</text>
+  </g>
+  <line x1="2857.2000000000003" y1="940" x2="2857.2000000000003" y2="970" stroke="black"/>
+  <g id="node27">
+    <rect x="2829.2000000000003" y="970" width="57.2" height="50" fill="lightblue" stroke="black"/>
+    <text x="2838.6000000000004" y="995" fill="black">SINGLE</text>
+    <text x="2839.2000000000003" y="1010" fill="blue">ul</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1020" x2="2857.2000000000003" y2="1050" stroke="black"/>
+  <g id="node28">
+    <rect x="2823.2000000000003" y="1050" width="69.6" height="50" fill="lightyellow" stroke="black"/>
+    <text x="2832.4" y="1075" fill="black">MULTIPLE</text>
+    <text x="2833.2000000000003" y="1090" fill="blue">EMPTY</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1100" x2="2421.2000000000003" y2="1130" stroke="black"/>
+  <g id="node29">
+    <rect x="2396.2000000000003" y="1130" width="51.0" height="50" fill="white" stroke="black"/>
+    <text x="2405.7000000000003" y="1155" fill="black">DUMMY</text>
+    <text x="2406.2000000000003" y="1170" fill="blue">EMPTY</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1100" x2="2571.2000000000003" y2="1130" stroke="black"/>
+  <g id="node30">
+    <rect x="2543.2000000000003" y="1130" width="57.2" height="50" fill="lightblue" stroke="black"/>
+    <text x="2552.6000000000004" y="1155" fill="black">SINGLE</text>
+    <text x="2553.2000000000003" y="1170" fill="blue">li</text>
+  </g>
+  <line x1="2571.2000000000003" y1="1180" x2="2571.2000000000003" y2="1210" stroke="black"/>
+  <g id="node31">
+    <rect x="2543.2000000000003" y="1210" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2552.6000000000004" y="1235" fill="black">BINARY</text>
+    <text x="2553.2000000000003" y="1250" fill="blue">:</text>
+  </g>
+  <line x1="2571.2000000000003" y1="1260" x2="2514.2000000000003" y2="1290" stroke="black"/>
+  <g id="node32">
+    <rect x="2467.2000000000003" y="1290" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="2477.0000000000005" y="1315" fill="black">TRANSLATABLE</text>
+    <text x="2477.2000000000003" y="1330" fill="blue">Reuse</text>
+  </g>
+  <line x1="2571.2000000000003" y1="1260" x2="2628.6000000000004" y2="1290" stroke="black"/>
+  <g id="node33">
+    <rect x="2581.6000000000004" y="1290" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="2591.4000000000005" y="1315" fill="black">TRANSLATABLE</text>
+    <text x="2591.6000000000004" y="1330" fill="blue">blah blah</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1100" x2="2800.0000000000005" y2="1130" stroke="black"/>
+  <g id="node34">
+    <rect x="2772.0000000000005" y="1130" width="57.2" height="50" fill="lightblue" stroke="black"/>
+    <text x="2781.4000000000005" y="1155" fill="black">SINGLE</text>
+    <text x="2782.0000000000005" y="1170" fill="blue">li</text>
+  </g>
+  <line x1="2800.0000000000005" y1="1180" x2="2800.0000000000005" y2="1210" stroke="black"/>
+  <g id="node35">
+    <rect x="2772.0000000000005" y="1210" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="2781.4000000000005" y="1235" fill="black">BINARY</text>
+    <text x="2782.0000000000005" y="1250" fill="blue">:</text>
+  </g>
+  <line x1="2800.0000000000005" y1="1260" x2="2743.0000000000005" y2="1290" stroke="black"/>
+  <g id="node36">
+    <rect x="2696.0000000000005" y="1290" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="2705.8000000000006" y="1315" fill="black">TRANSLATABLE</text>
+    <text x="2706.0000000000005" y="1330" fill="blue">Reduce</text>
+  </g>
+  <line x1="2800.0000000000005" y1="1260" x2="2857.4000000000005" y2="1290" stroke="black"/>
+  <g id="node37">
+    <rect x="2810.4000000000005" y="1290" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="2820.2000000000007" y="1315" fill="black">TRANSLATABLE</text>
+    <text x="2820.4000000000005" y="1330" fill="blue">blah blah</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1100" x2="2971.8000000000006" y2="1130" stroke="black"/>
+  <g id="node38">
+    <rect x="2924.8000000000006" y="1130" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="2934.600000000001" y="1155" fill="black">TRANSLATABLE</text>
+    <text x="2934.8000000000006" y="1170" fill="blue">, and</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1100" x2="3143.2000000000007" y2="1130" stroke="black"/>
+  <g id="node39">
+    <rect x="3115.2000000000007" y="1130" width="57.2" height="50" fill="lightblue" stroke="black"/>
+    <text x="3124.600000000001" y="1155" fill="black">SINGLE</text>
+    <text x="3125.2000000000007" y="1170" fill="blue"> li</text>
+  </g>
+  <line x1="3143.2000000000007" y1="1180" x2="3143.2000000000007" y2="1210" stroke="black"/>
+  <g id="node40">
+    <rect x="3115.2000000000007" y="1210" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3124.600000000001" y="1235" fill="black">BINARY</text>
+    <text x="3125.2000000000007" y="1250" fill="blue">:</text>
+  </g>
+  <line x1="3143.2000000000007" y1="1260" x2="3086.2000000000007" y2="1290" stroke="black"/>
+  <g id="node41">
+    <rect x="3039.2000000000007" y="1290" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="3049.000000000001" y="1315" fill="black">TRANSLATABLE</text>
+    <text x="3049.2000000000007" y="1330" fill="blue">Recycle</text>
+  </g>
+  <line x1="3143.2000000000007" y1="1260" x2="3200.600000000001" y2="1290" stroke="black"/>
+  <g id="node42">
+    <rect x="3153.600000000001" y="1290" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="3163.400000000001" y="1315" fill="black">TRANSLATABLE</text>
+    <text x="3163.600000000001" y="1330" fill="blue">blah blah</text>
+  </g>
+  <line x1="2857.2000000000003" y1="1100" x2="3293.000000000001" y2="1130" stroke="black"/>
+  <g id="node43">
+    <rect x="3268.000000000001" y="1130" width="51.0" height="50" fill="white" stroke="black"/>
+    <text x="3277.500000000001" y="1155" fill="black">DUMMY</text>
+    <text x="3278.000000000001" y="1170" fill="blue">EMPTY</text>
+  </g>
+  <line x1="2857.2000000000003" y1="940" x2="3364.0" y2="970" stroke="black"/>
+  <g id="node44">
+    <rect x="3339.0" y="970" width="51.0" height="50" fill="white" stroke="black"/>
+    <text x="3348.5" y="995" fill="black">DUMMY</text>
+    <text x="3349.0" y="1010" fill="blue">EMPTY</text>
+  </g>
+  <line x1="3233.2000000000003" y1="860" x2="3775.0" y2="890" stroke="black"/>
+  <g id="node45">
+    <rect x="3747.0" y="890" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3756.4" y="915" fill="black">BINARY</text>
+    <text x="3757.0" y="930" fill="blue">:</text>
+  </g>
+  <line x1="3775.0" y1="940" x2="3457.0" y2="970" stroke="black"/>
+  <g id="node46">
+    <rect x="3410.0" y="970" width="94.4" height="50" fill="white" stroke="black"/>
+    <text x="3419.8" y="995" fill="black">TRANSLATABLE</text>
+    <text x="3420.0" y="1010" fill="blue">This project</text>
+  </g>
+  <line x1="3775.0" y1="940" x2="3832.4" y2="970" stroke="black"/>
+  <g id="node47">
+    <rect x="3804.4" y="970" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3813.8" y="995" fill="black">BINARY</text>
+    <text x="3814.4" y="1010" fill="blue">.</text>
+  </g>
+  <line x1="3832.4" y1="1020" x2="3608.4" y2="1050" stroke="black"/>
+  <g id="node48">
+    <rect x="3524.4" y="1050" width="168.8" height="50" fill="white" stroke="black"/>
+    <text x="3571.2000000000003" y="1075" fill="black">TRANSLATABLE</text>
+    <text x="3534.4" y="1090" fill="blue">will use .NET technology</text>
+  </g>
+  <line x1="3832.4" y1="1020" x2="3927.2000000000003" y2="1050" stroke="black"/>
+  <g id="node49">
+    <rect x="3899.2000000000003" y="1050" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="3908.6000000000004" y="1075" fill="black">BINARY</text>
+    <text x="3909.2000000000003" y="1090" fill="blue">.</text>
+  </g>
+  <line x1="3927.2000000000003" y1="1100" x2="3794.2000000000003" y2="1130" stroke="black"/>
+  <g id="node50">
+    <rect x="3713.2000000000003" y="1130" width="162.6" height="50" fill="white" stroke="black"/>
+    <text x="3757.0000000000005" y="1155" fill="black">TRANSLATABLE</text>
+    <text x="3723.2000000000003" y="1170" fill="blue">My domain is alexmc.NET</text>
+  </g>
+  <line x1="3927.2000000000003" y1="1100" x2="4018.8" y2="1130" stroke="black"/>
+  <g id="node51">
+    <rect x="3990.8" y="1130" width="57.2" height="50" fill="lightgreen" stroke="black"/>
+    <text x="4000.2000000000003" y="1155" fill="black">BINARY</text>
+    <text x="4000.8" y="1170" fill="blue">.</text>
+  </g>
+  <line x1="4018.8" y1="1180" x2="3982.8" y2="1210" stroke="black"/>
+  <g id="node52">
+    <rect x="3895.8" y="1210" width="175.0" height="50" fill="white" stroke="black"/>
+    <text x="3945.6000000000004" y="1235" fill="black">TRANSLATABLE</text>
+    <text x="3905.8" y="1250" fill="blue">This is a simple sentence</text>
+  </g>
+  <line x1="4018.8" y1="1180" x2="4115.8" y2="1210" stroke="black"/>
+  <g id="node53">
+    <rect x="4090.8" y="1210" width="51.0" height="50" fill="white" stroke="black"/>
+    <text x="4100.3" y="1235" fill="black">DUMMY</text>
+    <text x="4100.8" y="1250" fill="blue">EMPTY</text>
+  </g>
+</svg>

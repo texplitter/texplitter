@@ -1,0 +1,442 @@
+[
+    {
+        "type": "japanese_dot",
+        "class": "BREAK",
+        "description": "This regular expression matches a Japanese full stop (。) or dot (．) followed by one or more whitespace characters. ",
+        "regex": "[。．]   # Match a Japanese full stop (。) or dot (．)\n\\s+     # Followed by one or more whitespace characters\n",
+        "callback": "default_callback",
+        "sample": "。 "
+    },
+    {
+        "type": "japanese_word",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches one or more Japanese characters, including Hiragana, Katakana, and Kanji (Han). ",
+        "regex": "[\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]+  # Match one or more Japanese characters\n",
+        "callback": "default_callback",
+        "sample": "こんにちは世界"
+    },
+    {
+        "type": "japanese_pt",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches one or more characters that belong to the Unicode block 'CJK Symbols and Punctuation'.  ",
+        "regex": "\\p{InCJK_Symbols_and_Punctuation}+\\s+  # One or more CJK symbols and punctuation characters\n",
+        "callback": "default_callback",
+        "sample": "〆々々 "
+    },
+    {
+        "type": "acronym",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches a variety of common acronyms and abbreviations. Each acronym or abbreviation is separated by a pipe '|' symbol, indicating an OR condition. ",
+        "regex": "L\\.P\\. | Alt\\. | Approx\\. | E\\.G\\. | O\\. | Maj\\. | Misc\\. | P\\.O\\. | J\\.D\\. | Jam\\. | Card\\. | Dec\\. | Sept\\. | MR\\. | Long\\. | Hat\\. | G\\. | Link\\. | DC\\. | D\\.C\\. | M\\.T\\. | Hz\\. | Mrs\\. | By\\. | Act\\. | Var\\. | N\\.V\\. | Aug\\. | B\\. | S\\.A\\. | Up\\. | Job\\. | Num\\. | M\\.I\\.T\\. | Ok\\. | Org\\. | Ex\\. | Cont\\. | U\\. | Mart\\. | Fn\\. | Abs\\. | Lt\\. | OK\\. | Z\\. | E\\. | Kb\\. | Est\\. | A\\.M\\. | L\\.A\\. | Prof\\. | U\\.S\\. | Nov\\. | Ph\\.D\\. | Mar\\. | I\\.T\\. | exec\\. | Jan\\. | N\\.Y\\. | X\\. | Md\\. | Op\\. | vs\\. | D\\.A\\. | A\\.D\\. | R\\.L\\. | P\\.M\\. | Or\\. | M\\.R\\. | Cap\\. | PC\\. | Feb\\. | Exec\\. | I\\.e\\. | Sep\\. | Gb\\. | K\\. | U\\.S\\.C\\. | Mt\\. | S\\. | A\\.S\\. | C\\.O\\.D\\. | Capt\\. | Col\\. | In\\. | C\\.F\\. | Adj\\. | AD\\. | I\\.D\\. | Mgr\\. | R\\.T\\. | B\\.V\\. | M\\. | Conn\\. | Yr\\. | Rev\\. | Phys\\. | pp\\. | Ms\\. | To\\. | Sgt\\. | J\\.K\\. | Nr\\. | Jun\\. | Fri\\. | S\\.A\\.R\\. | Lev\\. | Lt\\.Cdr\\. | Def\\. | F\\. | Do\\. | Joe\\. | Id\\. | Mr\\. | Dept\\. | Is\\. | Pvt\\. | Diff\\. | Hon\\.B\\.A\\. | Q\\. | Mb\\. | On\\. | Min\\. | J\\.B\\. | Ed\\. | AB\\. | A\\. | S\\.p\\.A\\. | I\\. | a\\.m\\. | Comm\\. | Go\\. | VS\\. | L\\. | All\\. | PP\\. | P\\.V\\. | T\\. | K\\.R\\. | Etc\\. | D\\. | Adv\\. | Lib\\. | E\\.g\\. | Pro\\. | U\\.S\\.A\\. | S\\.E\\. | AA\\. | Rep\\. | Sq\\. | As\\. | St\\.\n",
+        "callback": "default_callback",
+        "sample": "Approx."
+    },
+    {
+        "type": "xml_declaration",
+        "class": "BREAK_TEMPLATE",
+        "description": "This regular expression matches XML declarations, including doctype declarations, XML declarations, comments, processing instructions, and entity declarations. ",
+        "regex": "(                              # Start of group 1\n    \\s*<!DOCTYPE\\s[^>]*>          # Match doctype declaration\n    |                          # OR\n    \\s*<\\?xml\\s[^>]*\\?>           # Match XML declaration\n    |                          # OR\n    \\s*<!--.*?-->                 # Match comments\n    |                          # OR\n    \\s*<\\?.*?\\?>                  # Match processing instructions\n    |                          # OR\n    \\s*<!ENTITY\\s[^>]*>           # Match entity declaration\n)                              # End of group 1\n        ",
+        "callback": "default_callback",
+        "sample": "<!DOCTYPE html>"
+    },
+    {
+        "type": "cdata_open",
+        "class": "OPEN_TAG",
+        "description": "This regular expression matches the opening CDATA section tag. ",
+        "regex": "<!\\[CDATA\\[     # Match the opening CDATA tag\n",
+        "callback": "default_callback",
+        "sample": "<![CDATA["
+    },
+    {
+        "type": "cdata_close",
+        "class": "CLOSE_TAG",
+        "description": "This regular expression matches the closing CDATA section tag. ",
+        "regex": "\\]\\]>           # Match the closing CDATA tag\n",
+        "callback": "default_callback",
+        "sample": "]]>"
+    },
+    {
+        "type": "xml_entity",
+        "class": "SYMBOL",
+        "description": "This regular expression matches a format string placeholder, which is typically used in templating or string formatting. The placeholder is enclosed in curly braces and may have optional leading and trailing whitespace. The content inside the braces consists of alphanumeric characters and hyphens.  ",
+        "regex": "\\s*               # Optional leading whitespace\n\\{                # Opening curly brace\n[a-zA-Z0-9\\-]+?   # One or more alphanumeric characters or hyphens (non-greedy)\n\\}                # Closing curly brace\n\\s*               # Optional trailing whitespace\n",
+        "callback": "default_callback",
+        "sample": "{example-1}"
+    },
+    {
+        "type": "break_tag",
+        "class": "BREAK",
+        "description": "This regular expression matches HTML <br> tags, including both self-closing and non-self-closing variants. The pattern accounts for optional whitespace within the tag.  ",
+        "regex": "<br          # Opening angle bracket followed by 'br'\n\\s*          # Optional whitespace\n/?           # Optional self-closing slash\n>            # Closing angle bracket\n",
+        "callback": "default_callback",
+        "sample": "<br>"
+    },
+    {
+        "type": "email",
+        "class": "SYMBOL",
+        "description": "This regular expression matches email addresses. It allows for optional angle brackets around the email. The local part of the email can include alphanumeric characters, dots, underscores, percent signs, plus signs, and hyphens. The domain part includes alphanumeric characters, dots, and hyphens. The top-level domain (TLD) must be at least two characters long and consist of alphabetic characters. ",
+        "regex": "<?                      # Optional opening angle bracket\n[a-zA-Z0-9._%+-]+       # Local part: one or more allowed characters\n@                       # At symbol\n[a-zA-Z0-9.-]+          # Domain: one or more allowed characters\n\\.                      # Dot before TLD\n[a-zA-Z]{2,}            # TLD: at least two alphabetic characters\n>?                      # Optional closing angle bracket\n",
+        "callback": "symbol_callback",
+        "sample": "<example.email+test@domain.com>"
+    },
+    {
+        "type": "open_close_tag",
+        "class": "SINGLE_TAG",
+        "description": " This regular expression matches an optional leading whitespace, followed by an opening angle bracket, a tag name consisting of one or more alphanumeric characters, optional whitespace inside the tag, a self-closing slash, a closing angle bracket, and optional trailing whitespace. ",
+        "regex": "\\s*              # Optional leading whitespace\n<                # Opening angle bracket\n[a-zA-Z0-9]+     # Tag name: one or more alphanumeric characters\n\\s*              # Optional whitespace (inside the tag)\n/                # Self-closing tag slash\n>                # Closing angle bracket\n\\s*              # Optional trailing whitespace\n",
+        "callback": "default_callback",
+        "sample": "<openclose />"
+    },
+    {
+        "type": "left_tag",
+        "class": "BEGINNING_TAG",
+        "description": "This regular expression matches an opening HTML or XML tag with attributes. The tag name consists of alphanumeric characters and hyphens. The pattern ensures that the tag is followed by at least one attribute, which starts with an alphabetic character.  ",
+        "regex": "\\s*                # Optional leading whitespace\n<                  # Opening angle bracket\n[a-zA-Z0-9\\-]+   # Tag name: one or more alphanumeric characters or hyphens\n\\s                 # At least one whitespace character\n(?=\\s*[a-zA-Z])    # Positive lookahead to ensure an attribute starting with an alphabetic character\n",
+        "callback": "left_tag_callback",
+        "sample": "<div class=\"container\">"
+    },
+    {
+        "type": "right_tag",
+        "class": "END_OPEN_TAG",
+        "description": "This regular expression matches a closing tag that starts with a quotation mark, a final punctuation character, or an initial punctuation character, followed by a greater-than sign. It also accounts for any optional whitespace that may follow the greater-than sign.  ",
+        "regex": "[\\\"\\p{Pf}\\p{Pi}\\']  # Match a quotation mark, final punctuation, or initial punctuation character\n>                   # Match the greater-than sign\n(\\s)*               # Match zero or more whitespace characters\n",
+        "callback": "default_callback",
+        "sample": "”>"
+    },
+    {
+        "type": "right_tag_close",
+        "class": "END_CLOSE_TAG",
+        "description": "This regular expression matches a closing tag that is preceded by a quotation mark, a punctuation final mark, or an initial quotation mark, followed by optional whitespace, a self- closing slash, and optional trailing whitespace.  ",
+        "regex": "[\\\"\\p{Pf}\\p{Pi}\\']  # Match a quotation mark, punctuation final mark, or initial quotation mark\n\\s*                 # Optional whitespace\n/                   # Self-closing tag slash\n>                   # Closing angle bracket\n\\s*                 # Optional trailing whitespace\n",
+        "callback": "default_callback",
+        "sample": "\" />"
+    },
+    {
+        "type": "mid_tag",
+        "class": "MIDDLE_TAG",
+        "description": "This regular expression matches attribute assignments within HTML or XML tags. It captures optional leading quotes or punctuation, followed by optional whitespace, an attribute name consisting of letters and hyphens, an equals sign, and then a starting quote or punctuation for the attribute value.  ",
+        "regex": "(                   # Start of the first capturing group\n    [\\\"\\p{Pf}\\p{Pi}\\']?  # Optional leading quote or punctuation\n    (\\s)*           # Optional whitespace\n)?                  # End of the first capturing group, making it optional\n[a-zA-Z\\-]*?        # Attribute name: zero or more letters or hyphens, non-greedy\n=                   # Equals sign\n[\\\"\\p{Pf}\\p{Pi}\\']  # Starting quote or punctuation for the attribute value\n",
+        "callback": "mid_tag_callback",
+        "sample": "\"data-attr=\""
+    },
+    {
+        "type": "close_tag",
+        "class": "CLOSE_TAG",
+        "description": "This regular expression matches XML or HTML closing tags, including any leading or trailing whitespaces. The tag name is expected to consist of alphanumeric characters and hyphens. Whitespaces around the tag are optional and accounted for.  ",
+        "regex": "\\s*               # Optional leading whitespace\n</                # Opening angle bracket and forward slash for closing tag\n[a-zA-Z0-9\\-]+    # Tag name: one or more alphanumeric characters or hyphens\n>                 # Closing angle bracket\n\\s*               # Optional trailing whitespace\n",
+        "callback": "close_tag_callback",
+        "sample": "</div>"
+    },
+    {
+        "type": "open_tag",
+        "class": "OPEN_TAG",
+        "description": "This regular expression matches an opening XML or HTML tag, including any leading or trailing whitespaces. The tag name is expected to consist of alphanumeric characters and hyphens.  ",
+        "regex": "\\s*               # Optional leading whitespace\n<                 # Opening angle bracket\n[\\w-]+            # Tag name: one or more alphanumeric characters or hyphens\n>                 # Closing angle bracket\n\\s*               # Optional trailing whitespace\n",
+        "callback": "open_tag_callback",
+        "sample": "<div>"
+    },
+    {
+        "type": "xml_entity",
+        "class": "SINGLE_TAG",
+        "description": "This regular expression matches XML or HTML character entities. It starts with an ampersand (&), followed by zero or more lowercase alphabetic characters (non-greedy), and ends with a semicolon (;).  ",
+        "regex": "&           # Ampersand, starting the character entity\n[a-z]*?     # Zero or more lowercase alphabetic characters (non-greedy)\n;           # Semicolon, ending the character entity\n",
+        "callback": "default_callback",
+        "sample": "&abc;"
+    },
+    {
+        "type": "simple_quote",
+        "class": "QUOTE",
+        "description": "This regular expression matches a single quote character.  ",
+        "regex": "'  # Single quote character\n",
+        "callback": "default_callback",
+        "sample": "'"
+    },
+    {
+        "type": "double_quote",
+        "class": "QUOTE",
+        "description": "This regular expression matches any character that is a double quote (\"), a final punctuation (Pf), or an initial punctuation (Pi).  ",
+        "regex": "[\\\"\\p{Pf}\\p{Pi}]  # Match double quote, final punctuation, or initial punctuation\n",
+        "callback": "default_callback",
+        "sample": "“"
+    },
+    {
+        "type": "several_new_line",
+        "class": "BREAK",
+        "description": "This regular expression matches two or more consecutive newline characters.  ",
+        "regex": "\\n{2,}  # Match two or more newline characters\n",
+        "callback": "default_callback",
+        "sample": "\n\nHello World"
+    },
+    {
+        "type": "number",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches integer and floating-point numbers. It captures one or more digits, optionally followed by a decimal point and one or more digits. The lookahead ensures that the number is followed by a whitespace, closing parenthesis, closing bracket, closing brace, opening bracket, double quote, period, equal sign, or the end of the string, without including these characters in the match.  ",
+        "regex": "\\d+                # One or more digits\n(\\.\\d+)?           # Optional decimal point followed by one or more digits\n(?=                # Lookahead to ensure the number is followed by:\n    [\\s\\)\\]\\}\\[\\\"\\.=<]  # Whitespace, closing parenthesis, closing bracket, closing brace, opening bracket, double quote, period, or equal sign\n    | $            # Or the end of the string\n)\n",
+        "callback": "default_callback",
+        "sample": "123.45)"
+    },
+    {
+        "type": "compound_capital",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches compound capitalized words, which are words that start with an uppercase letter followed by lowercase letters, a hyphen, and then either a sequence of lowercase letters, apostrophes, and hyphens, or another capitalized word. The lookahead ensures that the match is followed by specific characters or end of string, making it suitable for parsing text with punctuation and special characters. ",
+        "regex": "[\\p{Lu}]                # Match an uppercase letter\n[\\p{Ll}]+               # Followed by one or more lowercase letters\n-                       # Followed by a hyphen\n(                       # Start of group:\n    [\\p{Ll}'-]+         # Match one or more lowercase letters, apostrophes, or hyphens\n    |                   # OR\n    [\\p{Lu}][\\p{Ll}]    # Match an uppercase letter followed by a lowercase letter\n)                       # End of group\n(?=                     # Lookahead to ensure the match is followed by:\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\"-]  # Whitespace, punctuation, or special characters\n    |                   # OR\n    [\\.。．,:;\"?!][\\s<&>]  # Punctuation followed by whitespace or special characters\n    |                   # OR\n    [\\.。．:?\\)]$         # Punctuation at the end of the string\n    |                   # OR\n    $                   # End of string\n)\n",
+        "callback": "default_callback",
+        "sample": "Hello-world"
+    },
+    {
+        "type": "compound_lowercase",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches compound words that are hyphenated and consist of lowercase letters. The first part of the compound word must be one or more lowercase letters. The second part can either be: 1. One or more lowercase letters, apostrophes, or hyphens. 2. An uppercase letter followed by one or more lowercase letters, apostrophes, or hyphens. The lookahead ensures that the compound word is followed by specific characters or end of string, which include whitespace, punctuation, or certain HTML entities. ",
+        "regex": "[\\p{Ll}]+                # One or more lowercase letters\n-                        # Hyphen\n(                        # Start of group for the second part of the compound word\n    [\\p{Ll}'-]+          # One or more lowercase letters, apostrophes, or hyphens\n    |                    # OR\n    [\\p{Lu}][\\p{Ll}'-]+  # An uppercase letter followed by one or more lowercase letters, apostrophes, or hyphens\n)                        # End of group\n(?=                      # Lookahead to ensure the compound word is followed by specific characters\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\"-]  # Whitespace, punctuation, or certain HTML entities\n    |                    # OR\n    [\\.。．,:;\"?!][\\s<&>]  # Punctuation followed by whitespace or certain HTML entities\n    |                    # OR\n    [\\.。．:?\\)]$          # Punctuation at the end of the string\n    | $                  # End of string\n)\n",
+        "callback": "default_callback",
+        "sample": "word-compound"
+    },
+    {
+        "type": "compound_uppercase",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches compound words that start with uppercase letters and are followed by a hyphen and another word. The first part can be either all uppercase letters or uppercase letters with optional apostrophes or hyphens. The second part can be all uppercase letters, all lowercase letters, or a mix of one uppercase letter followed by lowercase letters, with optional apostrophes or hyphens. The lookahead ensures that the match is followed by specific punctuation or whitespace characters, indicating the end of the word. ",
+        "regex": "([\\p{Lu}]+                # First part: one or more uppercase letters\n|[\\p{Lu}\\'-]+)            # or uppercase letters with optional apostrophes or hyphens\n-                         # Hyphen separating the two parts\n([\\p{Lu}\\'-]+             # Second part: one or more uppercase letters with optional apostrophes or hyphens\n|[\\p{Ll}\\'-]+             # or one or more lowercase letters with optional apostrophes or hyphens\n|[\\p{Lu}][\\p{Ll}\\'-]+)    # or one uppercase letter followed by one or more lowercase letters with optional apostrophes or hyphens\n(?=                       # Lookahead to ensure the match is followed by specific characters\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"-]  # Whitespace, punctuation, or specific characters\n    |[\\.。．,:;\\\"\\?!][\\s<&>]            # or punctuation followed by whitespace or specific characters\n    |[\\.。．:?\\)]$                      # or punctuation at the end of the string\n    |$                                 # or end of the string\n)\n",
+        "callback": "default_callback",
+        "sample": "HELLO-WORLD"
+    },
+    {
+        "type": "capital_word",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches a capitalized word, which starts with an uppercase letter followed by one or more lowercase letters. It can optionally include apostrophes or right single quotation marks followed by lowercase letters. The lookahead ensures that the word is followed by specific characters or end of string, indicating word boundaries or punctuation. ",
+        "regex": "[\\p{Lu}]            # Match an uppercase letter\n[\\p{Ll}]+           # Followed by one or more lowercase letters\n(                   # Start of optional group\n    [\\'’]           # Match an apostrophe or right single quotation mark\n    \\p{Ll}+         # Followed by one or more lowercase letters\n)*                  # Zero or more occurrences of the optional group\n(?=                 # Positive lookahead for word boundaries or punctuation\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"-]  # Match whitespace, HTML tags, punctuation, or special characters\n    |               # OR\n    [\\.。．,:;\\\"“\\?!][\\s<&>]  # Match punctuation followed by whitespace or special characters\n    |               # OR\n    [\\.。．:?\\)]$    # Match punctuation at the end of the string\n    | $             # OR end of string\n)\n",
+        "callback": "default_callback",
+        "sample": "Alex's"
+    },
+    {
+        "type": "lowercase_word",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches a sequence of lowercase letters, potentially including apostrophes or right single quotation marks followed by more lowercase letters. It ensures that the matched sequence is followed by specific characters or sequences, such as whitespace, punctuation, or the end of the string.  ",
+        "regex": "[\\p{Ll}]+                # One or more lowercase letters\n(                        # Start of group for apostrophe and following letters\n    [\\'’]                # Apostrophe or right single quotation mark\n    \\p{Ll}+              # One or more lowercase letters\n)*                       # Zero or more occurrences of the group\n(?=                      # Positive lookahead to ensure the match is followed by specific characters\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-]  # Whitespace, punctuation, or specific symbols\n    |                    # OR\n    [\\.。．,:;\\\"\\'\\?!][\\\"\\'“\\s<&>]  # Punctuation followed by specific symbols or whitespace\n    |                    # OR\n    [\\.。．:?\\)]$         # Punctuation at the end of the string\n    | $                  # End of the string\n)\n",
+        "callback": "default_callback",
+        "sample": "it's"
+    },
+    {
+        "type": "uppercase_word",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches a sequence of one or more uppercase letters, optionally followed by an apostrophe and one or more lowercase letters. The match is followed by a lookahead assertion to ensure that the sequence is followed by a whitespace, punctuation, or certain special characters, ensuring it is a standalone word or at the end of a sentence.  ",
+        "regex": "[\\p{Lu}]+                # One or more uppercase letters\n(                        # Optional group for apostrophe and lowercase letters\n    [\\'’]                # Apostrophe or right single quotation mark\n    \\p{Ll}+              # One or more lowercase letters\n)*                       # Zero or more occurrences of the optional group\n(?=                      # Lookahead assertion\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-]  # Whitespace, punctuation, or special characters\n    |                    # OR\n    [\\.。．,:;\\\"\\'“\\?!][\\\"\\'“\\s<&>]  # Punctuation followed by certain characters\n    |                    # OR\n    [\\.。．:?\\)]$         # Punctuation at the end of the string\n    | $                  # End of string\n)\n",
+        "callback": "default_callback",
+        "sample": "HELLO"
+    },
+    {
+        "type": "camel_case_word",
+        "class": "TRANSLATABLE",
+        "description": "This regular expression matches a sequence of one or more Unicode uppercase or lowercase letters that are followed by specific boundary characters. These boundary characters include whitespace, certain punctuation marks, and other symbols.  ",
+        "regex": "[\\p{Lu}\\p{Ll}]+                # One or more Unicode uppercase or lowercase letters\n(?=                            # Positive lookahead for boundary characters\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-]  # Whitespace, punctuation, and symbols\n    |                          # OR\n    [\\.。．,:;\\\"“\\?!][\\\"\\'“\\s<&>]  # Punctuation followed by specific characters\n    |                          # OR\n    [\\.。．:?\\)]$               # Punctuation at the end of the string\n    | $                        # End of string\n)\n",
+        "callback": "default_callback",
+        "sample": "camelCaseWord"
+    },
+    {
+        "type": "ellipsis",
+        "class": "BREAK",
+        "description": "This regular expression matches an ellipsis, which is defined as two or more consecutive periods, optionally followed by a whitespace character. The lookahead assertion ensures that the ellipsis is followed by either a '<', '&', '>', or the end of the string.  ",
+        "regex": "\\.{2,}          # Match two or more consecutive periods\n\\s?             # Optionally match a single whitespace character\n(?=[<&>]|$)     # Lookahead to ensure the next character is '<', '&', '>', or the end of the string\n",
+        "callback": "default_callback",
+        "sample": ".. <"
+    },
+    {
+        "type": "dot",
+        "class": "BREAK",
+        "description": "This regular expression matches a period followed by one or more whitespace characters, only if it is followed by a specific set of characters or the end of the string. The set of characters includes: '<', '&', '>', '\"', any uppercase Unicode letter, or the end of the string.  ",
+        "regex": "\\.              # Match a literal period\n\\s+             # Match one or more whitespace characters\n(?=             # Positive lookahead to ensure the following condition is met\n    [<&>\\\"\\p{Lu}]|$    # one of <, &, >, \" or any uppercase Unicode letter, or end of string\n)\n",
+        "callback": "default_callback",
+        "sample": ".    <"
+    },
+    {
+        "type": "dot_end",
+        "class": "BREAK",
+        "description": "This regular expression matches a literal dot (.) only if it is followed by the end of the string ($).  ",
+        "regex": "\\.      # Match a literal dot (.)\n(?=$)   # Assert that what follows is the end of the string\n",
+        "callback": "default_callback",
+        "sample": "."
+    },
+    {
+        "type": "comma",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a comma that is followed by either a whitespace character, an HTML special character (&, <, >), or the end of the string.  ",
+        "regex": ",                # Match a literal comma\n(?=              # Positive lookahead to assert what follows the comma\n    [\\s<&>]      # Match any whitespace character or HTML special characters (&, <, >)\n    |            # OR\n    $            # End of the string\n)\n",
+        "callback": "default_callback",
+        "sample": ", <"
+    },
+    {
+        "type": "equal",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches an equal sign '='.  ",
+        "regex": "=   # Matches the equal sign character\n",
+        "callback": "punctuation_callback",
+        "sample": "="
+    },
+    {
+        "type": "colon",
+        "class": "BREAK",
+        "description": "This regular expression matches a colon followed by zero or more whitespace characters. It uses a positive lookahead to ensure that the colon is followed by either an angle bracket (< or >), an ampersand (&), an uppercase letter (\\p{Lu}), a lowercase letter (\\p{Ll}), or the end of the string ($).  ",
+        "regex": ":                # Match a literal colon\n\\s*              # Match zero or more whitespace characters\n(?=              # Positive lookahead to ensure what follows is:\n    [<&>\\p{Lu}\\p{Ll}]|$   # <, >, &, upper/lower Unicode letter, or end of string\n)\n",
+        "callback": "default_callback",
+        "sample": ": <"
+    },
+    {
+        "type": "slash",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a single forward slash character.  ",
+        "regex": "/  # Match a single forward slash\n",
+        "callback": "default_callback",
+        "sample": "/"
+    },
+    {
+        "type": "semi_colon",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a semicolon that is followed by either a whitespace character, an HTML special character (&, <, >), or the end of the string.  ",
+        "regex": ";                # Match a semicolon\n(?=              # Positive lookahead to assert what follows the semicolon\n    [\\s<&>]      # Match any whitespace character, or one of the characters: <, &, >\n    |            # OR\n    $            # End of the string\n)\n",
+        "callback": "punctuation_callback",
+        "sample": "; <"
+    },
+    {
+        "type": "open_bracket",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches zero or more whitespace characters followed by an open parenthesis.  ",
+        "regex": "\\s*    # Zero or more whitespace characters\n\\(     # Open parenthesis\n",
+        "callback": "default_callback",
+        "sample": "   ("
+    },
+    {
+        "type": "close_bracket",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a closing parenthesis followed by zero or more whitespace characters.  ",
+        "regex": "\\)      # Closing parenthesis\n\\s*     # Zero or more whitespace characters\n",
+        "callback": "default_callback",
+        "sample": ")"
+    },
+    {
+        "type": "open_square_bracket",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches zero or more whitespace characters followed by an open square bracket '['.  ",
+        "regex": "\\s*    # Match zero or more whitespace characters\n\\[     # Match an open square bracket '['\n",
+        "callback": "default_callback",
+        "sample": "  ["
+    },
+    {
+        "type": "close_square_bracket",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a closing square bracket ']' followed by zero or more whitespace characters.  ",
+        "regex": "\\]       # Match a closing square bracket\n\\s*      # Match zero or more whitespace characters\n",
+        "callback": "default_callback",
+        "sample": "]   "
+    },
+    {
+        "type": "open_curly_bracket",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches zero or more whitespace characters followed by an opening curly bracket '{'.  ",
+        "regex": "\\s*    # Match zero or more whitespace characters\n\\{     # Match an opening curly bracket '{'\n",
+        "callback": "default_callback",
+        "sample": "    {"
+    },
+    {
+        "type": "close_curly_bracket",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a closing curly bracket '}' followed by zero or more whitespace characters.  ",
+        "regex": "\\}       # Closing curly bracket\n\\s*      # Zero or more whitespace characters\n",
+        "callback": "default_callback",
+        "sample": "}"
+    },
+    {
+        "type": "dash",
+        "class": "BREAK",
+        "description": "This regular expression matches a pattern where a single dash is surrounded by whitespace characters on both sides.  ",
+        "regex": "\\s    # Leading whitespace character\n-     # Dash character\n\\s    # Trailing whitespace character\n",
+        "callback": "default_callback",
+        "sample": " - "
+    },
+    {
+        "type": "long_dash",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a long dash (em dash) character. The pattern uses Unicode to match the em dash character. ",
+        "regex": "\\u2014  # Unicode code point for em dash (—)\n",
+        "callback": "default_callback",
+        "sample": "—"
+    },
+    {
+        "type": "vertical_bar",
+        "class": "BREAK",
+        "description": "This regular expression matches a vertical bar '|' surrounded by whitespace characters.  ",
+        "regex": "\\s      # Match any whitespace character\n\\|      # Match the vertical bar character '|'\n\\s      # Match any whitespace character\n",
+        "callback": "default_callback",
+        "sample": " | "
+    },
+    {
+        "type": "dash",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a single dash character.  ",
+        "regex": "-  # Match a single dash character\n",
+        "callback": "default_callback",
+        "sample": "-"
+    },
+    {
+        "type": "vertical_bar",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches a single vertical bar character ('|').  ",
+        "regex": "\\|  # Matches a single vertical bar character\n",
+        "callback": "default_callback",
+        "sample": "|"
+    },
+    {
+        "type": "close_question",
+        "class": "BREAK",
+        "description": "This regular expression matches a question mark or an exclamation mark that is followed by a space, an HTML entity, or a character from the Hiragana, Katakana, or Han Unicode blocks. Additionally, it matches an exclamation mark followed by punctuation (.,:;\"?!), which is then followed by a space, an HTML entity, or a character from the Hiragana, Katakana, or Han Unicode blocks.  ",
+        "regex": "\\?                  # Match a question mark\n|                   # OR\n!                   # Match an exclamation mark\n(?=                 # Lookahead assertion\n    [\\s<&]          # Match a space, <, &, or\n    |               # OR\n    \\p{IsHiragana}  # Match a Hiragana character\n    |               # OR\n    \\p{IsKatakana}  # Match a Katakana character\n    |               # OR\n    \\p{IsHan}       # Match a Han character\n    |               # OR\n    [\\.,:;\\\"?!]     # Match punctuation (.,:;\\\"?!)\n    [\\s<&>]         # Followed by a space, <, &, or >\n)\n",
+        "callback": "default_callback",
+        "sample": "!こんにちは"
+    },
+    {
+        "type": "open_question",
+        "class": "PUNCTUATION",
+        "description": "This regular expression matches either the inverted question mark (¿) or the inverted exclamation mark (¡).  ",
+        "regex": "[¿¡]  # Match either the inverted question mark (¿) or the inverted exclamation mark (¡)\n",
+        "callback": "question_mark_callback",
+        "sample": "¿"
+    },
+    {
+        "type": "several_spaces",
+        "class": "SEVERAL_SPACES",
+        "description": "This regular expression matches two or more consecutive whitespace characters.  ",
+        "regex": "\\s{2,}  # Match two or more consecutive whitespace characters\n",
+        "callback": "whitespace_callback",
+        "sample": "    Hello, world!"
+    },
+    {
+        "type": "space",
+        "class": "SPACE",
+        "description": "This regular expression matches any whitespace character, including spaces, tabs, and newlines.  ",
+        "regex": "\\s  # Matches any whitespace character (space, tab, newline, etc.)\n",
+        "callback": "default_callback",
+        "sample": "\t"
+    },
+    {
+        "type": "URL",
+        "class": "SYMBOL",
+        "description": "This regular expression matches URLs with specific schemes (ftp, file, http, https). It ensures that the URL does not contain any whitespace or certain punctuation characters within it and ends with a valid character.  ",
+        "regex": "(ftp|file|http|https)://  # URL scheme: ftp, file, http, or https followed by '://'\n[^\\s\\(\\)\\]\\[\\\"\\'<]+       # One or more characters that are not whitespace or specific punctuation\n[^\\.\\\"\\'<]                # A character that is not a period, double quote, single quote, or less-than sign\n(?=[\\s\\(\\)\\]\\[\\\"\\.\\'<]|$) # Lookahead to ensure the URL is followed by whitespace, specific punctuation, or end of string\n",
+        "callback": "symbol_callback",
+        "sample": "https://example.com/path"
+    },
+    {
+        "type": "symbol",
+        "class": "SYMBOL",
+        "description": "This regular expression matches a sequence of characters that: 1. Does not start with any whitespace, parentheses, brackets, braces, quotes, equal sign, or specific Unicode characters (Hiragana, Katakana, Han). 2. Ends with a character that is not a colon, period, quote, parenthesis, brace, bracket, or equal sign. 3. Is followed by either whitespace, parentheses, brackets, quotes, period, equal sign, end of string, or a space at the end of the string.  ",
+        "regex": "[^\\s\\(\\)\\[\\]\\{\\}\\\"\\'=<\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]+  # Start: Exclude specific characters\n[^:\\.\\\"\\'\\)\\(\\{\\}\\[\\]=<]                                      # End: Exclude specific characters\n(?=[\\s\\(\\)\\[\\]\\\"\\'\\.=<]|$|\\s+$)                               # Followed by: Specific characters or end of string\n",
+        "callback": "symbol_callback",
+        "sample": "example_string"
+    },
+    {
+        "type": "other_symbol",
+        "class": "SYMBOL",
+        "description": "This regular expression matches any character except a newline.  ",
+        "regex": ".    # Match any character except a newline\n",
+        "callback": "symbol_callback",
+        "sample": "·"
+    }
+]

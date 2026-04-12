@@ -1,0 +1,28 @@
+[package]
+name = "texplitter_rs"
+version = "2.0.0-alpha.0"
+edition = "2021"
+
+[lib]
+# `cdylib` is required for maturin to build the Python extension module;
+# `rlib` is retained so `cargo test` / `cargo check --example demo` still
+# work against the crate as a normal Rust library.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+fancy-regex = "0.17"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+indexmap = { version = "2.14", features = ["serde"] }
+log = "0.4"
+simplelog = "0.12"
+textwrap = "0.16"
+thiserror = "1.0"
+xmlwriter = "0.1"
+pyo3 = { version = "0.28", features = ["extension-module"], optional = true }
+
+[dev-dependencies]
+serde_json = "1.0"
+
+[features]
+python = ["pyo3"]
