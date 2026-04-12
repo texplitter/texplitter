@@ -1036,7 +1036,7 @@ determines how the segment tree treats it. There are 15 token classes:</p>
 </tr>
 <tr>
 <td><code>SYMBOL</code></td>
-<td>Non-translatable inline element (URL, email, placeholder, attribute reference)</td>
+<td>Non-translatable inline element (URL, email, generic placeholder)</td>
 </tr>
 <tr>
 <td><code>SPACE</code></td>
@@ -1110,7 +1110,7 @@ determines how the segment tree treats it. There are 15 token classes:</p>
 </tr>
 <tr>
 <td><code>SINGLE_TAG</code></td>
-<td>Self-closing tag or entity (<code>&lt;br/&gt;</code>, <code>&amp;amp;</code>)</td>
+<td>Self-closing tag, entity, or protected inline construct (<code>&lt;br/&gt;</code>, <code>&amp;amp;</code>, AsciiDoc <code>&lt;&lt;xref&gt;&gt;</code>, <code>{attr}</code>)</td>
 </tr>
 </tbody>
 </table>

@@ -1,0 +1,1078 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Rust-backed text segmentation for AI pipelines">
+      
+      
+        <meta name="author" content="Alex Martinez Corria">
+      
+      
+        <link rel="canonical" href="https://texplitter.github.io/texplitter/blog/segmenting-asciidoc-for-translation/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/texplitter_b.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Not Everything Needs an LLM - texplitter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#not-everything-needs-an-llm" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="texplitter" class="md-header__button md-logo" aria-label="texplitter" data-md-component="logo">
+      
+  <img src="../../assets/texplitter_b.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            texplitter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Not Everything Needs an LLM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/texplitter/texplitter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    texplitter/texplitter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="texplitter" class="md-nav__button md-logo" aria-label="texplitter" data-md-component="logo">
+      
+  <img src="../../assets/texplitter_b.svg" alt="logo">
+
+    </a>
+    texplitter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/texplitter/texplitter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    texplitter/texplitter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../custom-rulesets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Rulesets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config-editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-segmentation-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The segmentation problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-texplitter-solves-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How texplitter solves it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How texplitter solves it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-segment-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The segment tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#placeholders-and-rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholders and rebuild
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#worked-example-segmenting-asciidoc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked example: segmenting AsciiDoc
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worked example: segmenting AsciiDoc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ruleset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ruleset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-segments-in-different-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using segments in different pipelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-own-rulesets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your own rulesets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try it
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="not-everything-needs-an-llm">Not Everything Needs an LLM<a class="headerlink" href="#not-everything-needs-an-llm" title="Permanent link">&para;</a></h1>
+<p>There's a growing instinct in AI engineering to route every task
+through a language model. It's understandable — frontier models are
+remarkably capable, and the path from problem to prototype is often
+just a prompt. But capability isn't the right criterion for every
+stage of a pipeline. The right question is: <strong>does this task benefit
+from intelligence, or is it better served by an algorithm?</strong></p>
+<p>Classifying markup is a good test case. Given a chunk of HTML, a
+model <em>can</em> tell you which parts are translatable prose and which are
+structural tags. But the classification is entirely deterministic —
+<code>&lt;div class="warning"&gt;</code> is always markup, <code>href="/deadline"</code> is
+always a URL. No ambiguity, no judgment, no context dependence. It's
+a pattern-matching problem with a known, finite set of rules.</p>
+<p>Delegating it to a model anyway has real costs:</p>
+<p><strong>Noise.</strong> Markup is structural noise in any language task. Every
+<code>&lt;div&gt;</code>, every <code>class="..."</code>, every <code>{attribute-ref}</code> competes for
+attention in your model's context window without contributing
+semantic value. Tags pollute translation context, dilute RAG
+embeddings, and leak into fine-tuning datasets. Stripping noise
+before the model sees it isn't just an optimization — it improves
+output quality.</p>
+<p><strong>Inconsistency.</strong> A model might preserve a URL in one paragraph and
+translate it in the next. It might strip a <code>&lt;span&gt;</code> tag it deems
+irrelevant, or shift a closing tag to match target-language word
+order. Run the same document twice and you may get structurally
+different output. A rule-based classifier produces identical results
+every time — which matters for translation memory alignment,
+regression testing, and auditable pipelines.</p>
+<p><strong>Silent failures.</strong> When a model misclassifies a tag, the result is
+silent corruption: a broken link, a mangled attribute, a missing
+placeholder. You discover it in QA, or in production. A rule-based
+engine either matches a pattern or it doesn't — failures are visible,
+debuggable, and fixable by editing a regex.</p>
+<p><strong>Cost at scale.</strong> A 1 MB document sent to a frontier model for
+markup-aware processing costs dollars and takes minutes. The same
+document through a compiled regex pipeline takes 25 ms and costs
+nothing. At thousands of documents per day, the preprocessing stage
+alone can dominate your budget.</p>
+<p>The best AI pipelines don't use models for everything — they use
+models where intelligence is needed and algorithms where
+determinism is needed. For structured text, that means: <strong>classify
+deterministically, then let the model focus on language.</strong></p>
+<p><a href="https://github.com/texplitter/texplitter">texplitter</a> is an
+open-source library built on this principle. It tokenizes structured
+text with customizable regex rules, builds a segment tree, and
+extracts classified segments — with everything labeled by semantic
+class. The core is written in Rust (25 ms on a 1 MB document) and
+exposed to Python via pyo3.</p>
+<p>In this article I'll explain the approach, then demonstrate it by
+segmenting AsciiDoc — a format with enough structural variety to
+stress-test any segmentation engine.</p>
+<h2 id="the-segmentation-problem">The segmentation problem<a class="headerlink" href="#the-segmentation-problem" title="Permanent link">&para;</a></h2>
+<p>Consider what "content" means in a real document:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;warning&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>You <span class="p">&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>must<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;</span> update before
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;/deadline&quot;</span><span class="p">&gt;</span>March 15th<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>Of the 130 characters in this fragment, only 39 are content: "You
+must update before March 15th." The rest — 70% of the input — is
+structural noise. Every token of it competes for attention in your
+model's context window, and none of it needs language understanding
+to classify.</p>
+<p>Different pipelines need different things from the same document, but
+all of them benefit from removing the noise first:</p>
+<ul>
+<li><strong>Translation</strong>: "You <strong>must</strong> update before <strong>March 15th</strong>." —
+  translatable text with formatting context, but not the <code>&lt;div&gt;</code>
+  wrapper, the <code>class="warning"</code> attribute, or the URL.</li>
+<li><strong>RAG embedding</strong>: just the prose, no tags — but you want the
+  heading trail for chunk context.</li>
+<li><strong>Fine-tuning</strong>: the prose paragraphs, stripped clean, but with
+  code blocks excluded.</li>
+<li><strong>Structured extraction</strong>: the code blocks themselves, with their
+  surrounding prose for context.</li>
+</ul>
+<p>All of these require the same preprocessing step: <strong>classify every
+token</strong> before it reaches any model. Is it translatable prose? A
+structural boundary? A symbol that must be protected? An inline tag
+that wraps content?</p>
+<p>This means segmentation isn't just "strip the tags." It's:</p>
+<ol>
+<li><strong>Classify</strong> every piece of text: is it translatable, structural,
+   a symbol that must be protected, or a sentence boundary?</li>
+<li><strong>Build structure</strong>: which tags wrap which content? Where do
+   sentences begin and end?</li>
+<li><strong>Extract</strong>: pull out the pieces you need, with enough context to
+   reassemble later.</li>
+<li><strong>Protect</strong>: replace inline tags and symbols with safe placeholders
+   that downstream processing can't corrupt.</li>
+<li><strong>Rebuild</strong>: after processing, put the structure back.</li>
+</ol>
+<p>And the rules for what counts as "content" change depending on the
+format. HTML tags look like <code>&lt;b&gt;</code>, AsciiDoc bold looks like <code>*bold*</code>,
+Markdown uses <code>**bold**</code>, and DITA has its own vocabulary. A
+segmentation engine that only understands HTML is useless for half
+your content.</p>
+<h2 id="how-texplitter-solves-it">How texplitter solves it<a class="headerlink" href="#how-texplitter-solves-it" title="Permanent link">&para;</a></h2>
+<p>texplitter's approach is a five-stage pipeline:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Input text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  → Tokenize (customizable regex rules)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  → Build segment tree (iterative, handles any depth)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  → Extract classified segments
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  → Generate placeholders
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  → Rebuild after processing
+</code></pre></div>
+<p>The key insight is that <strong>tokenization rules are data, not code</strong>.
+Each format gets a JSON ruleset — an ordered list of regex patterns,
+each tagged with a token class (<code>TRANSLATABLE</code>, <code>BREAK</code>, <code>SYMBOL</code>,
+<code>OPEN_TAG</code>, etc.). The tokenizer compiles all rules into a single
+combined regex and scans the input in one pass. First match wins:
+the rule whose pattern matches at the earliest position in the text
+is used.</p>
+<p>This means adding support for a new format doesn't require changing
+any code. You create a JSON file with rules for your format's syntax,
+and the same engine handles everything else.</p>
+<h3 id="the-segment-tree">The segment tree<a class="headerlink" href="#the-segment-tree" title="Permanent link">&para;</a></h3>
+<p>Once tokenized, the flat token stream is organized into a tree:</p>
+<ul>
+<li><strong>Single</strong> nodes wrap content in tag pairs (<code>&lt;p&gt;...&lt;/p&gt;</code>)</li>
+<li><strong>Binary</strong> nodes split at sentence boundaries (<code>.</code>)</li>
+<li><strong>Translatable</strong> leaves hold the actual text</li>
+</ul>
+<p>The tree is built iteratively using explicit work stacks — no
+recursion. This matters because real-world documents can nest hundreds
+of levels deep (think deeply nested <code>&lt;div&gt;</code> structures or AsciiDoc
+include chains), and a recursive approach would overflow the stack.</p>
+<h3 id="placeholders-and-rebuild">Placeholders and rebuild<a class="headerlink" href="#placeholders-and-rebuild" title="Permanent link">&para;</a></h3>
+<p>When you extract segments, inline tags become placeholders:</p>
+<table>
+<thead>
+<tr>
+<th>Original</th>
+<th>Segment</th>
+<th>Placeholder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Click &lt;a href="..."&gt;here&lt;/a&gt;</code></td>
+<td><code>Click %%1%%here%%2%%</code></td>
+<td><code>%%1%%</code> = <code>&lt;a href="@a/href~0@"&gt;</code>, <code>%%2%%</code> = <code>&lt;/a&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>For translation, the model sees <code>Click %%1%%here%%2%%</code> and produces
+<code>Haga clic %%1%%aquí%%2%%</code>. The rebuild step knows that <code>%%1%%</code> is
+the opening <code>&lt;a&gt;</code> tag and puts it back — even if the model reordered
+the sentence. For RAG or fine-tuning, you can simply discard the
+placeholder segments and keep only the <code>TRANSLATABLE</code> class.</p>
+<h2 id="worked-example-segmenting-asciidoc">Worked example: segmenting AsciiDoc<a class="headerlink" href="#worked-example-segmenting-asciidoc" title="Permanent link">&para;</a></h2>
+<p>To show this isn't just an HTML trick, let's segment AsciiDoc — a
+format with its own structural syntax that shares nothing with HTML.
+(The AsciiDoc ruleset shipped with texplitter is provided as a sample
+to illustrate custom ruleset creation; it has not been fully tested
+in production scenarios.)</p>
+<h3 id="the-input">The input<a class="headerlink" href="#the-input" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>== Getting Started
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Install the {product-name} by running:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>NOTE: You *must* have `Python 3.9` or later.
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>See &lt;&lt;installation&gt;&gt; for platform-specific instructions.
+</code></pre></div>
+<p>This fragment has five different kinds of non-translatable structure:</p>
+<table>
+<thead>
+<tr>
+<th>Construct</th>
+<th>AsciiDoc syntax</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Section title</td>
+<td><code>==</code></td>
+<td>Heading level 2 — structural, not content</td>
+</tr>
+<tr>
+<td>Attribute reference</td>
+<td><code>{product-name}</code></td>
+<td>Expands at build time — must not be translated</td>
+</tr>
+<tr>
+<td>Bold formatting</td>
+<td><code>*must*</code></td>
+<td>Markers must survive round-trip</td>
+</tr>
+<tr>
+<td>Monospace</td>
+<td><code>`Python 3.9`</code></td>
+<td>Backtick markers must be preserved</td>
+</tr>
+<tr>
+<td>Cross-reference</td>
+<td><code>&lt;&lt;installation&gt;&gt;</code></td>
+<td>Anchor ID — translating it breaks the link</td>
+</tr>
+</tbody>
+</table>
+<p>Note that <code>NOTE:</code> is <em>not</em> structural — the word "NOTE" is
+translatable (<code>NOTA</code> in Spanish, <code>REMARQUE</code> in French), while the
+<code>:</code> separator naturally acts as a sentence break.</p>
+<h3 id="the-ruleset">The ruleset<a class="headerlink" href="#the-ruleset" title="Permanent link">&para;</a></h3>
+<p>texplitter ships with a built-in AsciiDoc ruleset. Here are the key
+rules that handle the constructs above:</p>
+<p><strong>Section titles</strong> become <code>BREAK</code> tokens (sentence boundaries):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asciidoc_section_title&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BREAK&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^={1,5}\\s+&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Attribute references</strong> become <code>SINGLE_TAG</code> tokens (protected inline
+nodes — pushed and immediately popped from the tag stack, like a
+self-closing HTML tag):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asciidoc_attribute_ref&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SINGLE_TAG&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\\s*\\{[a-zA-Z0-9_-]+\\}\\s*&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Bold text</strong> uses paired <code>OPEN_BRACKET</code> / <code>CLOSE_BRACKET</code> tokens
+so the content between the markers stays translatable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asciidoc_bold&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OPEN_BRACKET&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\\s*\\*(?=\\S)&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">},</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asciidoc_bold_close&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CLOSE_BRACKET&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;(?&lt;=\\S)\\*(?=\\s|[.,;:!?\\)]|$)&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
+</code></pre></div>
+<p>The opening marker matches optional whitespace + <code>*</code> before a
+non-space character; the closing marker matches <code>*</code> after a non-space
+character, followed by whitespace, punctuation, or end-of-string.
+The word between the markers is classified as <code>TRANSLATABLE</code> by the
+normal word rules, and the segment tree wraps all three tokens into a
+single subtree — so the content is accessible while the markers are
+protected.</p>
+<p><strong>Cross-references</strong> become <code>SINGLE_TAG</code> (same rationale — they are
+self-contained inline elements that must not be translated):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asciidoc_xref&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SINGLE_TAG&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;&lt;[^,&gt;]+(,[^&gt;]+)?&gt;&gt;&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>All of these rules sit <em>before</em> the generic word and punctuation
+rules (inherited from the default HTML/XML ruleset). Because
+first-match-wins is positional, the AsciiDoc-specific patterns fire
+before the generic ones can claim the text.</p>
+<h3 id="the-code">The code<a class="headerlink" href="#the-code" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">texplitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tokenizer</span><span class="p">,</span> <span class="n">SegmentTree</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">tok</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="s2">&quot;asciidoc&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;== Getting Started</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s2">Install the {product-name} by running:</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s2">NOTE: You *must* have `Python 3.9` or later.</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s2">See &lt;&lt;installation&gt;&gt; for platform-specific instructions.&quot;&quot;&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">tokens</span> <span class="o">=</span> <span class="n">tok</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="n">tree</span> <span class="o">=</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">segments</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">extract_segments</span><span class="p">()</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">seg</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The output contains only classified text. The section title prefix,
+attribute reference, and cross-reference are all classified correctly
+and separated from the translatable content. Bold and monospace
+content appears as translatable text within its formatting context.</p>
+<h3 id="using-segments-in-different-pipelines">Using segments in different pipelines<a class="headerlink" href="#using-segments-in-different-pipelines" title="Permanent link">&para;</a></h3>
+<p>Once you have the classified segments, the same tree feeds different
+use cases:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Translation: send translatable segments to an API</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">seg</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="k">if</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;TRANSLATABLE&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>            <span class="n">translated</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">target_lang</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># RAG: embed only the prose, skip structural tokens</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">prose</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">seg</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>         <span class="k">if</span> <span class="n">v</span> <span class="ow">and</span> <span class="s2">&quot;TRANSLATABLE&quot;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">]</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Fine-tuning: extract clean text for training data</span>
+</code></pre></div>
+<p>After translation, <code>rebuild_from_segments()</code> reinserts the processed
+text into the original tree, preserving all markup structure.</p>
+<h2 id="building-your-own-rulesets">Building your own rulesets<a class="headerlink" href="#building-your-own-rulesets" title="Permanent link">&para;</a></h2>
+<p>The AsciiDoc ruleset is just one example. The same pattern works for
+any structured format:</p>
+<ol>
+<li><strong>Start from the default ruleset</strong> — it already handles words,
+   numbers, punctuation, and whitespace in 30+ languages (including
+   CJK).</li>
+<li><strong>Prepend format-specific rules</strong> — they must come first because
+   of first-match-wins ordering.</li>
+<li><strong>Choose the right token class</strong> for each construct:</li>
+<li><code>BREAK</code> for structural boundaries (titles, paragraphs)</li>
+<li><code>SYMBOL</code> for non-translatable inline elements (URLs, emails)</li>
+<li><code>SINGLE_TAG</code> for protected inline constructs that should be
+     treated as self-closing nodes (attribute references, cross-references,
+     inline macros, entities, <code>&lt;br/&gt;</code>)</li>
+<li><code>OPEN_BRACKET</code> / <code>CLOSE_BRACKET</code> for paired formatting markers
+     (keeps content between them translatable)</li>
+<li><code>BREAK_TEMPLATE</code> for non-translatable blocks (code listings,
+     directives)</li>
+<li><strong>Test and iterate</strong> — texplitter ships with a browser-based
+   config editor (<code>texplitter config</code>) for visually editing and
+   testing rules.</li>
+</ol>
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<p>The Rust core matters when you're processing real volumes. On a
+single 1 MB HTML file (~200,000 words):</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Time</th>
+<th>Cost</th>
+<th>Deterministic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>texplitter (Rust)</td>
+<td>~25 ms</td>
+<td>$0</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Pure Python regex</td>
+<td>~8 min</td>
+<td>$0</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Frontier LLM</td>
+<td>minutes</td>
+<td>$2–10+</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>The 20,000x speedup over pure Python comes from Rust's fancy-regex
+engine and iterative tree construction — no GIL contention, no
+Python object allocation per token.</p>
+<p>But speed isn't the only advantage over delegating to a model. The
+classification is deterministic: process the same document a thousand
+times, get the same segments every time. There's no temperature
+setting, no prompt sensitivity, no variation between Tuesday and
+Wednesday. For pipelines that need reproducible output — translation
+memory alignment, regression testing, auditable data extraction —
+this matters more than speed.</p>
+<h2 id="try-it">Try it<a class="headerlink" href="#try-it" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pip<span class="w"> </span>install<span class="w"> </span>texplitter
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">texplitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tokenizer</span><span class="p">,</span> <span class="n">SegmentTree</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">tok</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>  <span class="c1"># HTML/XML by default</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">tokens</span> <span class="o">=</span> <span class="n">tok</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">your_html</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">tree</span> <span class="o">=</span> <span class="n">SegmentTree</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">segments</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">extract_segments</span><span class="p">()</span>
+</code></pre></div>
+<ul>
+<li><a href="https://github.com/texplitter/texplitter">GitHub</a></li>
+<li><a href="https://texplitter.github.io/texplitter/">Documentation</a></li>
+<li><a href="https://pypi.org/project/texplitter/">PyPI</a></li>
+</ul>
+<p>The library is MIT-licensed. Rulesets for Markdown, reStructuredText,
+DITA, and other formats are welcome as contributions.</p>
+<hr />
+<p><em>Alex Martinez Corria builds AI infrastructure for structured
+content processing.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.sections", "navigation.top", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -791,7 +791,7 @@
 <h3 id="example-rule">Example rule<a class="headerlink" href="#example-rule" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asciidoc_attribute_ref&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SYMBOL&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SINGLE_TAG&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Matches AsciiDoc attribute references ({name}).&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\\s*               # Optional leading whitespace\n\\{                # Opening curly brace\n[a-zA-Z0-9_-]+   # Attribute name\n\\}                # Closing curly brace\n\\s*               # Optional trailing whitespace\n&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;callback&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;symbol_callback&quot;</span><span class="p">,</span>
@@ -813,7 +813,7 @@
 </tr>
 <tr>
 <td><code>symbol_callback</code></td>
-<td>Assigns <code>SYMBOL</code> and generates a unique label (<code>@SYM{N}</code>)</td>
+<td>Generates a unique label (<code>@SYM{N}</code>); use with <code>SYMBOL</code> or <code>SINGLE_TAG</code> class</td>
 </tr>
 <tr>
 <td><code>open_tag_callback</code></td>
@@ -928,18 +928,24 @@ scenarios. Key design decisions:</p>
   catch-all excludes those characters so it doesn't swallow them.</p>
 </li>
 <li>
-<p><strong>Attribute references</strong> (<code>{name}</code>) consume optional surrounding
-  whitespace in the regex so they win over the generic curly-bracket
-  punctuation rule by matching at an earlier position.</p>
+<p><strong>Attribute references</strong> (<code>{name}</code>), <strong>cross-references</strong>
+  (<code>&lt;&lt;anchor&gt;&gt;</code>), <strong>inline macros</strong> (<code>link:url[text]</code>), <strong>footnotes</strong>,
+  <strong>callouts</strong>, and <strong>role blocks</strong> use <code>SINGLE_TAG</code> class. This
+  pushes and immediately pops the tag stack so the element is treated
+  as a protected inline node — like a self-closing HTML tag. The
+  attribute reference regex consumes optional surrounding whitespace
+  so it wins over the generic curly-bracket punctuation rule.</p>
+</li>
+<li>
+<p><strong>Superscript</strong> (<code>^text^</code>) and <strong>subscript</strong> (<code>~text~</code>) also use
+  <code>SINGLE_TAG</code>. The entire construct (including content) is one
+  protected token because the content is typically notation or
+  annotation references (<code>^2^</code>, <code>^[1]^</code>, <code>~2~</code>), not translatable
+  prose.</p>
 </li>
 <li>
 <p><strong>Block delimiters</strong> (<code>----</code>, <code>====</code>, <code>****</code>) use <code>BREAK_TEMPLATE</code>
   class so they act as non-translatable structural boundaries.</p>
-</li>
-<li>
-<p><strong>Cross-references</strong> (<code>&lt;&lt;anchor&gt;&gt;</code>) and <strong>inline macros</strong>
-  (<code>link:url[text]</code>) use <code>SYMBOL</code> class to protect them from
-  translation.</p>
 </li>
 <li>
 <p>The <strong>word, number, punctuation, and space rules</strong> are inherited
