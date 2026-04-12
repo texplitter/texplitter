@@ -1,0 +1,1797 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Rust-backed text segmentation for AI pipelines">
+      
+      
+        <meta name="author" content="Alex Martinez Corria">
+      
+      
+        <link rel="canonical" href="https://texplitter.github.io/texplitter/api-reference/">
+      
+      
+        <link rel="prev" href="../config-editor/">
+      
+      
+        <link rel="next" href="../changelog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/texplitter_b.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>API Reference - texplitter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="texplitter" class="md-header__button md-logo" aria-label="texplitter" data-md-component="logo">
+      
+  <img src="../assets/texplitter_b.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            texplitter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/texplitter/texplitter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    texplitter/texplitter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="texplitter" class="md-nav__button md-logo" aria-label="texplitter" data-md-component="logo">
+      
+  <img src="../assets/texplitter_b.svg" alt="logo">
+
+    </a>
+    texplitter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/texplitter/texplitter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    texplitter/texplitter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-rulesets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Rulesets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config-editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-level API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="High-level API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#texplittersegmenttext-rulesetdefault-translatable_attrsnone-inline_formatnumbered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        texplitter.segment(text, *, ruleset="default", translatable_attrs=None, inline_format="numbered")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmentresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SegmentResult
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SegmentResult">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rebuild-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rebuild() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#to_xliffsource_langen-target_langes-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_xliff(source_lang="en", target_lang="es") -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-listvalidationerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate() -&gt; list[ValidationError]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validationerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ValidationError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_rulesets-liststr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_rulesets() -&gt; list[str]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenizerrulesetdefault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tokenizer(ruleset="default")
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tokenizer(ruleset=&#34;default&#34;)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenizetext-str-listdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tokenize(text: str) -&gt; list[dict]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_unmatched_tags-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_unmatched_tags() -&gt; list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_nesting_errors-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_nesting_errors() -&gt; list
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmenttreetokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SegmentTree(tokens)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#treenode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TreeNode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TreeNode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build_full_value-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_full_value() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_segments-listdictstr-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_segments() -&gt; list[dict[str, str]]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_extended_segments-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_extended_segments() -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_placeholders_for_segmentsprefix-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_placeholders_for_segments(prefix) -&gt; tuple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild_from_segmentsindex-node_type-tag_list-extended_segments-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rebuild_from_segments(index, node_type, tag_list, extended_segments) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_pattern-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_pattern() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_attributes-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_attributes() -&gt; list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_svg-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_svg() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_dot_representation-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_dot_representation() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#utility-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utility functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utility functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert_tokens_to_stringtokens-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        convert_tokens_to_string(tokens) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace_substring_from_endtext-old-new-count-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        replace_substring_from_end(text, old, new, count) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_regex_patternsnamedefault-listdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_regex_patterns(name="default") -&gt; list[dict]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unknowntokenerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnknownTokenError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texplittererror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TexplitterError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-level API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="High-level API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#texplittersegmenttext-rulesetdefault-translatable_attrsnone-inline_formatnumbered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        texplitter.segment(text, *, ruleset="default", translatable_attrs=None, inline_format="numbered")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmentresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SegmentResult
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SegmentResult">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rebuild-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rebuild() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#to_xliffsource_langen-target_langes-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_xliff(source_lang="en", target_lang="es") -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate-listvalidationerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate() -&gt; list[ValidationError]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validationerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ValidationError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_rulesets-liststr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_rulesets() -&gt; list[str]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenizerrulesetdefault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tokenizer(ruleset="default")
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tokenizer(ruleset=&#34;default&#34;)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenizetext-str-listdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tokenize(text: str) -&gt; list[dict]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_unmatched_tags-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_unmatched_tags() -&gt; list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_nesting_errors-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_nesting_errors() -&gt; list
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmenttreetokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SegmentTree(tokens)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#treenode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TreeNode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TreeNode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build_full_value-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_full_value() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_segments-listdictstr-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_segments() -&gt; list[dict[str, str]]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extract_extended_segments-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extract_extended_segments() -&gt; dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_placeholders_for_segmentsprefix-tuple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_placeholders_for_segments(prefix) -&gt; tuple
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild_from_segmentsindex-node_type-tag_list-extended_segments-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rebuild_from_segments(index, node_type, tag_list, extended_segments) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_pattern-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_pattern() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get_attributes-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_attributes() -&gt; list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_svg-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_svg() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate_dot_representation-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_dot_representation() -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#utility-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utility functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utility functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert_tokens_to_stringtokens-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        convert_tokens_to_string(tokens) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace_substring_from_endtext-old-new-count-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        replace_substring_from_end(text, old, new, count) -&gt; str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_regex_patternsnamedefault-listdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_regex_patterns(name="default") -&gt; list[dict]
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unknowntokenerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UnknownTokenError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texplittererror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TexplitterError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="high-level-api">High-level API<a class="headerlink" href="#high-level-api" title="Permanent link">&para;</a></h2>
+<p>The high-level API is the recommended way to use texplitter. It
+handles tokenization, tree building, and segment extraction in a
+single call.</p>
+<h3 id="texplittersegmenttext-rulesetdefault-translatable_attrsnone-inline_formatnumbered"><code>texplitter.segment(text, *, ruleset="default", translatable_attrs=None, inline_format="numbered")</code><a class="headerlink" href="#texplittersegmenttext-rulesetdefault-translatable_attrsnone-inline_formatnumbered" title="Permanent link">&para;</a></h3>
+<p>Segment a markup document into classified translation units.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>(required)</td>
+<td>The markup text to segment</td>
+</tr>
+<tr>
+<td><code>ruleset</code></td>
+<td><code>str</code></td>
+<td><code>"default"</code></td>
+<td>Name of the tokenization ruleset</td>
+</tr>
+<tr>
+<td><code>translatable_attrs</code></td>
+<td><code>list[str]</code> or <code>None</code></td>
+<td><code>None</code></td>
+<td>Attribute names to extract as translatable segments</td>
+</tr>
+<tr>
+<td><code>inline_format</code></td>
+<td><code>str</code></td>
+<td><code>"numbered"</code></td>
+<td>Inline tag representation: <code>"numbered"</code> (compact <code>{#N}</code> placeholders) or <code>"xliff"</code> (XLIFF 2.1 <code>&lt;pc&gt;</code>/<code>&lt;ph&gt;</code> elements)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>SegmentResult</code></p>
+<p><strong>Raises:</strong> <code>ValueError</code> if <code>inline_format</code> is not <code>"numbered"</code> or <code>"xliff"</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">texplitter</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Default: numbered placeholders — clean, MT/LLM-friendly</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">texplitter</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="s1">&#39;&lt;p&gt;Click &lt;a href=&quot;url&quot;&gt;here&lt;/a&gt; to continue.&lt;/p&gt;&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># segments[0].text: &#39;Click {#1}here{/#1} to continue.&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># XLIFF 2.1 inline elements for CAT tools</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">result</span> <span class="o">=</span> <span class="n">texplitter</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="s1">&#39;&lt;p&gt;Click &lt;a href=&quot;url&quot;&gt;here&lt;/a&gt; to continue.&lt;/p&gt;&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">inline_format</span><span class="o">=</span><span class="s2">&quot;xliff&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># segments[0].text: &#39;Click &lt;pc id=&quot;1&quot; ...&gt;here&lt;/pc&gt; to continue.&#39;</span>
+</code></pre></div>
+<hr />
+<h3 id="segmentresult"><code>SegmentResult</code><a class="headerlink" href="#segmentresult" title="Permanent link">&para;</a></h3>
+<p>Result of segmenting a markup document. Contains the structural
+template, classified segments, and attributes.</p>
+<p><strong>Attributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>template</code></td>
+<td><code>str</code></td>
+<td>Structural skeleton with <code>%%N%%</code> placeholders</td>
+</tr>
+<tr>
+<td><code>segments</code></td>
+<td><code>list[Segment]</code></td>
+<td>Translation units (mutable)</td>
+</tr>
+<tr>
+<td><code>attributes</code></td>
+<td><code>list[tuple[str, str]]</code></td>
+<td>Non-translatable attribute <code>(key, value)</code> pairs</td>
+</tr>
+<tr>
+<td><code>original_data</code></td>
+<td><code>dict[str, str]</code></td>
+<td>Mapping from placeholder/data IDs to original HTML tags. Populated when <code>inline_format</code> is set; empty otherwise.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Methods:</strong></p>
+<h4 id="rebuild-str"><code>rebuild() -&gt; str</code><a class="headerlink" href="#rebuild-str" title="Permanent link">&para;</a></h4>
+<p>Rebuild the document from (possibly modified) segments. Substitutes
+<code>%%N%%</code> placeholders with segment text, then restores <code>@tag/attr~N@</code>
+placeholders to their original values. When <code>inline_format</code> was used,
+reverses the inline placeholders back to their original HTML tags
+using <code>original_data</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Para continuar pulse {#1}aquí{/#1}.&#39;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">rebuilt</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># &#39;&lt;p&gt;Para continuar pulse &lt;a href=&quot;url&quot;&gt;aquí&lt;/a&gt;.&lt;/p&gt;&#39;</span>
+</code></pre></div>
+<h4 id="to_xliffsource_langen-target_langes-str"><code>to_xliff(source_lang="en", target_lang="es") -&gt; str</code><a class="headerlink" href="#to_xliffsource_langen-target_langes-str" title="Permanent link">&para;</a></h4>
+<p>Export segments as an XLIFF 2.1 document. Each text segment becomes
+a <code>&lt;unit&gt;</code> with <code>&lt;source&gt;</code> and <code>&lt;target&gt;</code> elements. Inline tags are
+represented as XLIFF 2.1 <code>&lt;pc&gt;</code> (paired) and <code>&lt;ph&gt;</code> (standalone)
+elements, with original tag data in <code>&lt;originalData&gt;/&lt;data&gt;</code> sections.</p>
+<p>Works with any <code>inline_format</code> — numbered placeholders and raw HTML
+are converted to XLIFF inline elements automatically.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source_lang</code></td>
+<td><code>str</code></td>
+<td><code>"en"</code></td>
+<td>BCP 47 source language code</td>
+</tr>
+<tr>
+<td><code>target_lang</code></td>
+<td><code>str</code></td>
+<td><code>"es"</code></td>
+<td>BCP 47 target language code</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">texplitter</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">inline_format</span><span class="o">=</span><span class="s2">&quot;numbered&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">result</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Para continuar pulse {#1}aquí{/#1}.&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">xliff</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">to_xliff</span><span class="p">(</span><span class="n">source_lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">target_lang</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The XLIFF output contains the original source text in <code>&lt;source&gt;</code> and
+the (possibly translated) text in <code>&lt;target&gt;</code>, both with XLIFF inline
+annotations. Data IDs are deterministic (<code>d{N}.s</code>/<code>d{N}.e</code> for
+paired tags, <code>d{N}</code> for standalone), so source and target reference
+the same <code>&lt;data&gt;</code> entries even when placeholders are reordered.</p>
+<h4 id="validate-listvalidationerror"><code>validate() -&gt; list[ValidationError]</code><a class="headerlink" href="#validate-listvalidationerror" title="Permanent link">&para;</a></h4>
+<p>Check segments for placeholder integrity after modification. Compares
+each segment's current <code>.text</code> against its <code>.source_text</code> to detect
+corruption introduced by MT engines, LLMs, or manual editing.</p>
+<p><strong>Checks performed:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Error code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>missing_placeholder</code></td>
+<td>A placeholder ID in the source is absent from the translated text</td>
+</tr>
+<tr>
+<td><code>unknown_placeholder</code></td>
+<td>A placeholder ID in the translated text was not in the source</td>
+</tr>
+<tr>
+<td><code>orphan_open</code></td>
+<td>Opening placeholder without matching close</td>
+</tr>
+<tr>
+<td><code>orphan_close</code></td>
+<td>Closing placeholder without matching open</td>
+</tr>
+<tr>
+<td><code>nesting_violation</code></td>
+<td>Paired placeholders overlap incorrectly (crossed nesting)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>list[ValidationError]</code> — empty if all segments are valid.</p>
+<p>Works with both <code>"numbered"</code> and <code>"xliff"</code> inline formats.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">texplitter</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">inline_format</span><span class="o">=</span><span class="s2">&quot;numbered&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">result</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">mt_output</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">errors</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segment </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">segment_index</span><span class="si">}</span><span class="s2">: [</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="validationerror"><code>ValidationError</code><a class="headerlink" href="#validationerror" title="Permanent link">&para;</a></h3>
+<p>A single validation issue found in a segment.</p>
+<p><strong>Attributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>segment_index</code></td>
+<td><code>int</code></td>
+<td>The <code>%%N%%</code> index of the affected segment</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td><code>str</code></td>
+<td>Machine-readable error code (see table above)</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>str</code></td>
+<td>Human-readable description</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="segment"><code>Segment</code><a class="headerlink" href="#segment" title="Permanent link">&para;</a></h3>
+<p>A single translation unit extracted from the document.</p>
+<p><strong>Attributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index</code></td>
+<td><code>int</code></td>
+<td>(required)</td>
+<td>Placeholder index (matches <code>%%N%%</code> in template)</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>str</code></td>
+<td>(required)</td>
+<td>Segment text with inline placeholders (<code>{#N}</code> or XLIFF elements)</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>str</code></td>
+<td><code>"text"</code></td>
+<td><code>"text"</code> for content segments, <code>"attribute"</code> for translatable attributes</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td><code>str</code></td>
+<td><code>""</code></td>
+<td>For attribute segments, the attribute key (e.g., <code>img/alt~0</code>)</td>
+</tr>
+<tr>
+<td><code>source_text</code></td>
+<td><code>str</code></td>
+<td><code>""</code></td>
+<td>Original source text before modifications. Set automatically by <code>segment()</code>. Used by <code>to_xliff()</code> for the <code>&lt;source&gt;</code> element.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="list_rulesets-liststr"><code>list_rulesets() -&gt; list[str]</code><a class="headerlink" href="#list_rulesets-liststr" title="Permanent link">&para;</a></h3>
+<p>Return a sorted list of available ruleset names.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">texplitter</span><span class="o">.</span><span class="n">list_rulesets</span><span class="p">())</span>  <span class="c1"># [&#39;asciidoc&#39;, &#39;default&#39;]</span>
+</code></pre></div>
+<hr />
+<h2 id="advanced-api">Advanced API<a class="headerlink" href="#advanced-api" title="Permanent link">&para;</a></h2>
+<p>The classes below give fine-grained control over the tokenization
+and tree-building process. Most users won't need them — use
+<code>texplitter.segment()</code> instead.</p>
+<h3 id="tokenizerrulesetdefault"><code>Tokenizer(ruleset="default")</code><a class="headerlink" href="#tokenizerrulesetdefault" title="Permanent link">&para;</a></h3>
+<p>Tokenize text using a named ruleset.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>ruleset</code> (str, optional): Name of a packaged ruleset. Default: <code>"default"</code>.
+  Use <code>list_rulesets()</code> to see available names.</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<h4 id="tokenizetext-str-listdict"><code>tokenize(text: str) -&gt; list[dict]</code><a class="headerlink" href="#tokenizetext-str-listdict" title="Permanent link">&para;</a></h4>
+<p>Tokenize the input text. Returns a list of token dictionaries, each with:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>token_class</code></td>
+<td>str</td>
+<td>One of the 15 token classes (see <a href="../concepts/">Concepts</a>)</td>
+</tr>
+<tr>
+<td><code>token_type</code></td>
+<td>str</td>
+<td>The rule <code>type</code> that matched</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>str</td>
+<td>The matched text</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>str</td>
+<td>Display label</td>
+</tr>
+<tr>
+<td><code>start</code></td>
+<td>int</td>
+<td>Start position in input</td>
+</tr>
+<tr>
+<td><code>end</code></td>
+<td>int</td>
+<td>End position in input</td>
+</tr>
+</tbody>
+</table>
+<h4 id="get_unmatched_tags-list"><code>get_unmatched_tags() -&gt; list</code><a class="headerlink" href="#get_unmatched_tags-list" title="Permanent link">&para;</a></h4>
+<p>Return tags from the last <code>tokenize()</code> call that have no matching
+open/close counterpart.</p>
+<h4 id="get_nesting_errors-list"><code>get_nesting_errors() -&gt; list</code><a class="headerlink" href="#get_nesting_errors-list" title="Permanent link">&para;</a></h4>
+<p>Return tags from the last <code>tokenize()</code> call that were closed in the
+wrong order.</p>
+<hr />
+<h3 id="segmenttreetokens"><code>SegmentTree(tokens)</code><a class="headerlink" href="#segmenttreetokens" title="Permanent link">&para;</a></h3>
+<p>Build a segment tree from a list of tokens.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>tokens</code> (list[dict]): Token list from <code>Tokenizer.tokenize()</code>.
+  Each token must have <code>token_class</code>, <code>text</code>, and <code>label</code> as strings.
+  Raises <code>TexplitterError.InvalidToken</code> if validation fails.</li>
+</ul>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>tree</code> (TreeNode): The root node of the segment tree.</li>
+</ul>
+<hr />
+<h3 id="treenode"><code>TreeNode</code><a class="headerlink" href="#treenode" title="Permanent link">&para;</a></h3>
+<p>A node in the segment tree. Created by <code>SegmentTree</code>, not directly
+instantiated.</p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>node_type</code>: The node type (Multiple, Single, Binary, BinaryTemplate,
+  Translatable, or Dummy).</li>
+<li><code>value</code> (str): The node's text value.</li>
+<li><code>children</code> (list[TreeNode]): Child nodes.</li>
+<li><code>attributes</code> (list): Tag attributes.</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<h4 id="build_full_value-str"><code>build_full_value() -&gt; str</code><a class="headerlink" href="#build_full_value-str" title="Permanent link">&para;</a></h4>
+<p>Reconstruct the full tagged string from the tree, with attribute
+values replaced by placeholders.</p>
+<h4 id="extract_segments-listdictstr-str"><code>extract_segments() -&gt; list[dict[str, str]]</code><a class="headerlink" href="#extract_segments-listdictstr-str" title="Permanent link">&para;</a></h4>
+<p>Extract a flat list of leaf-level segments. Each dictionary maps
+tree-path keys to translatable text values.</p>
+<blockquote>
+<p><strong>Note:</strong> These are leaf-level decomposed fragments, not full
+translation units. For translation, use <code>texplitter.segment()</code>
+which returns complete sentences with inline tags preserved.</p>
+</blockquote>
+<h4 id="extract_extended_segments-dict"><code>extract_extended_segments() -&gt; dict</code><a class="headerlink" href="#extract_extended_segments-dict" title="Permanent link">&para;</a></h4>
+<p>Extract a nested dictionary preserving the full tree structure,
+including attributes, operators, left/right children, and metadata.</p>
+<h4 id="generate_placeholders_for_segmentsprefix-tuple"><code>generate_placeholders_for_segments(prefix) -&gt; tuple</code><a class="headerlink" href="#generate_placeholders_for_segmentsprefix-tuple" title="Permanent link">&para;</a></h4>
+<p>Replace each segment with a numbered placeholder (<code>%%1%%</code>, <code>%%2%%</code>, etc.).
+Returns a tuple of <code>(segment_index_map, template_string, segments_list)</code>.</p>
+<h4 id="rebuild_from_segmentsindex-node_type-tag_list-extended_segments-str"><code>rebuild_from_segments(index, node_type, tag_list, extended_segments) -&gt; str</code><a class="headerlink" href="#rebuild_from_segmentsindex-node_type-tag_list-extended_segments-str" title="Permanent link">&para;</a></h4>
+<p>Rebuild the node's value from edited extended segments.</p>
+<h4 id="build_pattern-str"><code>build_pattern() -&gt; str</code><a class="headerlink" href="#build_pattern-str" title="Permanent link">&para;</a></h4>
+<p>Build a pattern string showing the tree structure with node types.</p>
+<h4 id="get_attributes-list"><code>get_attributes() -&gt; list</code><a class="headerlink" href="#get_attributes-list" title="Permanent link">&para;</a></h4>
+<p>Collect all attributes from this node and its descendants.</p>
+<h4 id="generate_svg-str"><code>generate_svg() -&gt; str</code><a class="headerlink" href="#generate_svg-str" title="Permanent link">&para;</a></h4>
+<p>Generate an SVG visualization of the tree.</p>
+<h4 id="generate_dot_representation-str"><code>generate_dot_representation() -&gt; str</code><a class="headerlink" href="#generate_dot_representation-str" title="Permanent link">&para;</a></h4>
+<p>Generate a Graphviz DOT representation of the tree.</p>
+<hr />
+<h3 id="utility-functions">Utility functions<a class="headerlink" href="#utility-functions" title="Permanent link">&para;</a></h3>
+<h4 id="convert_tokens_to_stringtokens-str"><code>convert_tokens_to_string(tokens) -&gt; str</code><a class="headerlink" href="#convert_tokens_to_stringtokens-str" title="Permanent link">&para;</a></h4>
+<p>Concatenate the <code>text</code> field of each token into a single string.</p>
+<h4 id="replace_substring_from_endtext-old-new-count-str"><code>replace_substring_from_end(text, old, new, count) -&gt; str</code><a class="headerlink" href="#replace_substring_from_endtext-old-new-count-str" title="Permanent link">&para;</a></h4>
+<p>Replace <code>count</code> occurrences of <code>old</code> with <code>new</code>, searching from the
+end of the string.</p>
+<h4 id="load_regex_patternsnamedefault-listdict"><code>load_regex_patterns(name="default") -&gt; list[dict]</code><a class="headerlink" href="#load_regex_patternsnamedefault-listdict" title="Permanent link">&para;</a></h4>
+<p>Load a packaged ruleset by name. Returns the list of rule dictionaries
+from the JSON file.</p>
+<hr />
+<h3 id="exceptions">Exceptions<a class="headerlink" href="#exceptions" title="Permanent link">&para;</a></h3>
+<h4 id="unknowntokenerror"><code>UnknownTokenError</code><a class="headerlink" href="#unknowntokenerror" title="Permanent link">&para;</a></h4>
+<p>Raised when the tokenizer encounters text that doesn't match any
+rule in the ruleset.</p>
+<h4 id="texplittererror"><code>TexplitterError</code><a class="headerlink" href="#texplittererror" title="Permanent link">&para;</a></h4>
+<p>Base error type for the Rust core. Subtypes:</p>
+<ul>
+<li><code>TexplitterError.InvalidToken { index, reason }</code>: a token at the
+  given index failed validation.</li>
+<li><code>TexplitterError.InvalidNodeDict { reason }</code>: a node dictionary
+  passed to <code>TreeNode.from_dict()</code> has an invalid structure.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections", "navigation.top", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

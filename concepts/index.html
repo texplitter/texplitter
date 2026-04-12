@@ -1,0 +1,1394 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Rust-backed text segmentation for AI pipelines">
+      
+      
+        <meta name="author" content="Alex Martinez Corria">
+      
+      
+        <link rel="canonical" href="https://texplitter.github.io/texplitter/concepts/">
+      
+      
+        <link rel="prev" href="../getting-started/">
+      
+      
+        <link rel="next" href="../custom-rulesets/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/texplitter_b.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Concepts - texplitter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#concepts" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="texplitter" class="md-header__button md-logo" aria-label="texplitter" data-md-component="logo">
+      
+  <img src="../assets/texplitter_b.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            texplitter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Concepts
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/texplitter/texplitter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    texplitter/texplitter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="texplitter" class="md-nav__button md-logo" aria-label="texplitter" data-md-component="logo">
+      
+  <img src="../assets/texplitter_b.svg" alt="logo">
+
+    </a>
+    texplitter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/texplitter/texplitter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    texplitter/texplitter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-segmentation-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How segmentation works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token classes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Token classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structural-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structural tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bracket-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bracket tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-match-wins-tokenization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-match-wins tokenization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-match-wins tokenization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-segment-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The segment tree
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The segment tree">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tree-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tree example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templates-and-placeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates and placeholders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-format-abstraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inline format abstraction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inline format abstraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numbered-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbered (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xliff-21-inline_formatxliff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XLIFF 2.1 (inline_format="xliff")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-segment-id-uniqueness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-segment ID uniqueness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-numbered-then-xliff-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The numbered-then-XLIFF workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#placeholder-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholder validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualizing-the-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualizing the tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-rulesets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Rulesets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config-editor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config Editor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-segmentation-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How segmentation works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#token-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token classes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Token classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structural-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structural tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bracket-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bracket tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-match-wins-tokenization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-match-wins tokenization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-match-wins tokenization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-segment-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The segment tree
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The segment tree">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tree-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tree example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templates-and-placeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates and placeholders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-format-abstraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inline format abstraction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inline format abstraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numbered-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbered (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xliff-21-inline_formatxliff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XLIFF 2.1 (inline_format="xliff")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-segment-id-uniqueness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-segment ID uniqueness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-numbered-then-xliff-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The numbered-then-XLIFF workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#placeholder-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholder validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualizing-the-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualizing the tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h1>
+<p>This page explains how texplitter works internally. You don't need
+this to use the high-level <code>segment()</code> API, but it helps if you're
+creating custom rulesets or need fine-grained control over the
+segmentation process.</p>
+<h2 id="how-segmentation-works">How segmentation works<a class="headerlink" href="#how-segmentation-works" title="Permanent link">&para;</a></h2>
+<p>texplitter processes a document in three stages:</p>
+<ol>
+<li><strong>Tokenize</strong> — a regex-based scanner classifies every character
+   span in the input (tags, text, attributes, sentence boundaries).</li>
+<li><strong>Build tree</strong> — tokens are assembled into a hierarchical
+   segment tree that mirrors the document's nesting structure.</li>
+<li><strong>Extract segments</strong> — the tree produces full translation units
+   (complete sentences with inline tags) and a structural template.</li>
+</ol>
+<p>The <code>texplitter.segment()</code> function runs all three stages and returns
+the result as a <code>SegmentResult</code>.</p>
+<h2 id="token-classes">Token classes<a class="headerlink" href="#token-classes" title="Permanent link">&para;</a></h2>
+<p>Every token produced by the tokenizer carries a <code>token_class</code> that
+determines how the segment tree treats it. There are 15 token classes:</p>
+<h3 id="content-tokens">Content tokens<a class="headerlink" href="#content-tokens" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TRANSLATABLE</code></td>
+<td>Text that should be translated</td>
+</tr>
+<tr>
+<td><code>SYMBOL</code></td>
+<td>Non-translatable inline element (URL, email, placeholder, attribute reference)</td>
+</tr>
+<tr>
+<td><code>SPACE</code></td>
+<td>Single whitespace character</td>
+</tr>
+<tr>
+<td><code>SEVERAL_SPACES</code></td>
+<td>Two or more consecutive whitespace characters</td>
+</tr>
+<tr>
+<td><code>QUOTE</code></td>
+<td>Quotation mark (single, double, or Unicode)</td>
+</tr>
+<tr>
+<td><code>PUNCTUATION</code></td>
+<td>Comma, semicolon, bracket, etc.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="structural-tokens">Structural tokens<a class="headerlink" href="#structural-tokens" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BREAK</code></td>
+<td>Sentence boundary (period + space, question mark, double newline)</td>
+</tr>
+<tr>
+<td><code>BREAK_TEMPLATE</code></td>
+<td>Non-translatable block (XML declaration, processing instruction)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tag-tokens">Tag tokens<a class="headerlink" href="#tag-tokens" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPEN_TAG</code></td>
+<td>Opening tag without attributes (<code>&lt;div&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>BEGINNING_TAG</code></td>
+<td>Opening tag with attributes (<code>&lt;div</code>)</td>
+</tr>
+<tr>
+<td><code>MIDDLE_TAG</code></td>
+<td>Attribute assignment inside a tag (<code>class="</code>)</td>
+</tr>
+<tr>
+<td><code>END_OPEN_TAG</code></td>
+<td>Closing quote + angle bracket of a tag (<code>"&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>END_CLOSE_TAG</code></td>
+<td>Self-closing end (<code>"/&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>CLOSE_TAG</code></td>
+<td>Closing tag (<code>&lt;/div&gt;</code>)</td>
+</tr>
+<tr>
+<td><code>SINGLE_TAG</code></td>
+<td>Self-closing tag or entity (<code>&lt;br/&gt;</code>, <code>&amp;amp;</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bracket-tokens">Bracket tokens<a class="headerlink" href="#bracket-tokens" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OPEN_BRACKET</code></td>
+<td>Opening bracket-like marker</td>
+</tr>
+<tr>
+<td><code>CLOSE_BRACKET</code></td>
+<td>Closing bracket-like marker</td>
+</tr>
+</tbody>
+</table>
+<h2 id="first-match-wins-tokenization">First-match-wins tokenization<a class="headerlink" href="#first-match-wins-tokenization" title="Permanent link">&para;</a></h2>
+<p>The tokenizer compiles all rules into a single combined regex using
+named capture groups. When scanning input text, <code>fancy_regex</code> returns
+the first match at the earliest position. If two rules match at the
+same position, the one listed first in the JSON file wins.</p>
+<p>This means <strong>rule order matters</strong>. More specific rules (like AsciiDoc
+section titles) must come before generic rules (like the word catch-all)
+in the ruleset file.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>Given these two rules:</p>
+<ol>
+<li><code>asciidoc_attribute_ref</code> matching <code>\{[a-zA-Z0-9_-]+\}</code></li>
+<li><code>open_curly_bracket</code> matching <code>\s*\{</code></li>
+</ol>
+<p>The input <code>{name}</code> would be matched by rule 1 (attribute reference)
+because it appears first. If the order were reversed, rule 2 would
+match the <code>{</code> before rule 1 could match the full <code>{name}</code>.</p>
+<h2 id="the-segment-tree">The segment tree<a class="headerlink" href="#the-segment-tree" title="Permanent link">&para;</a></h2>
+<p>The <code>SegmentTree</code> builds a tree of <code>TreeNode</code> objects from a flat
+token stream. Each node has a <code>node_type</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Node type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Multiple</code></td>
+<td>Sequence of children (the root is always Multiple)</td>
+</tr>
+<tr>
+<td><code>Single</code></td>
+<td>Tag pair wrapper — has <code>open</code> and <code>close</code> strings</td>
+</tr>
+<tr>
+<td><code>Binary</code></td>
+<td>Split by a BREAK operator (e.g., <code>.</code> separating two sentences)</td>
+</tr>
+<tr>
+<td><code>BinaryTemplate</code></td>
+<td>Split by a BREAK_TEMPLATE</td>
+</tr>
+<tr>
+<td><code>Translatable</code></td>
+<td>Leaf node containing translatable text</td>
+</tr>
+<tr>
+<td><code>Dummy</code></td>
+<td>Empty placeholder</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tree-example">Tree example<a class="headerlink" href="#tree-example" title="Permanent link">&para;</a></h3>
+<p>For <code>&lt;p&gt;Hello &lt;b&gt;world&lt;/b&gt;. Goodbye.&lt;/p&gt;</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Multiple
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  └─ Single (open=&quot;&lt;p&gt;&quot;, close=&quot;&lt;/p&gt;&quot;)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       └─ Binary (operator=&quot;. &quot;)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>            ├─ Translatable: &quot;Hello &lt;b&gt;world&lt;/b&gt;&quot;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            └─ Translatable: &quot;Goodbye.&quot;
+</code></pre></div>
+<p>The tree is built <strong>iteratively</strong> (not recursively) using explicit
+work stacks. This is critical for real-world documents that can be
+hundreds or thousands of levels deep — a recursive approach would
+overflow the stack.</p>
+<h2 id="templates-and-placeholders">Templates and placeholders<a class="headerlink" href="#templates-and-placeholders" title="Permanent link">&para;</a></h2>
+<p>When the tree generates translation units, it produces:</p>
+<ul>
+<li>A <strong>template</strong> — the structural skeleton with <code>%%N%%</code> where
+  translatable content was: <code>&lt;p&gt;%%1%%&lt;/p&gt;</code></li>
+<li><strong>Segments</strong> — each <code>%%N%%</code> is a complete sentence where inline
+  HTML tags have been replaced with placeholders:
+  <code>Hello {#1}world{/#1}.</code></li>
+<li><strong>Attributes</strong> — tag attributes extracted and stored separately:
+  <code>('a/href~0', 'https://example.com')</code></li>
+</ul>
+<p>This design means:</p>
+<ul>
+<li>The translator sees <strong>full sentences</strong>, not fragments. Inline tags
+  are represented as clean <code>{#N}</code> placeholders that the model can
+  reorder freely without risk of corrupting markup.</li>
+<li>Attribute values (URLs, class names, IDs) are extracted and
+  restored automatically — they never reach the model.</li>
+<li>The structural template preserves all block-level nesting untouched.</li>
+</ul>
+<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
+<p>Every attribute in the source document (e.g., <code>href="url"</code>,
+<code>class="main"</code>, <code>alt="description"</code>) is extracted during
+segmentation and replaced with a <code>@tag/attr~N@</code> placeholder.</p>
+<p>By default, all attributes are <strong>non-translatable</strong> — they are
+stored separately and restored silently during rebuild. This is the
+right default for most attributes (URLs, CSS classes, IDs).</p>
+<p>Some attributes contain text that should be translated (e.g.,
+<code>alt</code>, <code>title</code> in HTML). The <code>translatable_attrs</code> parameter on
+<code>segment()</code> lets you opt in:</p>
+<ul>
+<li>Attributes whose name is in <code>translatable_attrs</code> become separate
+  <code>Segment</code> objects with <code>kind="attribute"</code> that you can translate.</li>
+<li>All other attributes go into the <code>.attributes</code> list for silent
+  restoration.</li>
+</ul>
+<h2 id="inline-format-abstraction">Inline format abstraction<a class="headerlink" href="#inline-format-abstraction" title="Permanent link">&para;</a></h2>
+<p>When texplitter extracts segments, inline HTML tags like <code>&lt;b&gt;</code>,
+<code>&lt;a href="..."&gt;</code>, and <code>&lt;img/&gt;</code> remain inside the segment text.
+This is fine if the downstream consumer understands HTML, but real
+translation workflows face a practical problem: <strong>most MT engines
+and LLMs corrupt inline markup.</strong></p>
+<p>Common failure modes:</p>
+<ul>
+<li>The model invents attributes that weren't there</li>
+<li>Nested tags lose their pairing (<code>&lt;a&gt;&lt;b&gt;</code> closed as <code>&lt;/a&gt;&lt;/b&gt;</code>)</li>
+<li>Self-closing tags are silently dropped</li>
+<li>Attribute placeholders like <code>@a/href~0@</code> are treated as
+  translatable text and modified</li>
+</ul>
+<p>The <code>inline_format</code> parameter controls how HTML tags are represented
+in segment text. Two modes are available:</p>
+<h3 id="numbered-default">Numbered (default)<a class="headerlink" href="#numbered-default" title="Permanent link">&para;</a></h3>
+<p>Tags are replaced with compact <code>{#N}...{/#N}</code> tokens:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Click {#1}here{/#1} to continue.
+</code></pre></div>
+<p>Why this syntax? Curly braces with a hash prefix (<code>{#1}</code>) were
+chosen to avoid collision with common patterns in content being
+translated:</p>
+<ul>
+<li>Format strings: <code>{name}</code>, <code>{0}</code>, <code>{count}</code></li>
+<li>Template variables: <code>${var}</code>, <code>{{placeholder}}</code></li>
+<li>JSON/code: <code>{ "key": "value" }</code></li>
+</ul>
+<p>The <code>#</code> prefix makes the pattern distinctive enough that MT engines
+can learn to pass it through unchanged, without confusing it with
+content that should be translated.</p>
+<p>The original HTML is stored separately in <code>result.original_data</code>
+(keyed by placeholder ID) and restored during <code>rebuild()</code>.</p>
+<h3 id="xliff-21-inline_formatxliff">XLIFF 2.1 (<code>inline_format="xliff"</code>)<a class="headerlink" href="#xliff-21-inline_formatxliff" title="Permanent link">&para;</a></h3>
+<p>Tags are replaced with XLIFF 2.1 inline elements:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Click &lt;pc id=&quot;1&quot; dataRefStart=&quot;d2&quot; dataRefEnd=&quot;d3&quot;&gt;here&lt;/pc&gt; to continue.
+</code></pre></div>
+<p>Paired tags become <code>&lt;pc&gt;</code> (paired code) elements; self-closing tags
+become <code>&lt;ph&gt;</code> (placeholder) elements. This follows the XLIFF 2.1
+specification (OASIS Standard, 2014) which replaced the older
+<code>&lt;bpt&gt;</code>/<code>&lt;ept&gt;</code>/<code>&lt;x&gt;</code> elements from XLIFF 1.2.</p>
+<p>Each inline element carries <code>dataRef</code>/<code>dataRefStart</code>/<code>dataRefEnd</code>
+attributes pointing to entries in <code>&lt;originalData&gt;/&lt;data&gt;</code> sections,
+where the actual HTML tags are stored. This design means the
+original markup can be reconstructed losslessly, even after the
+segment text passes through a CAT tool that only understands
+XLIFF semantics.</p>
+<h3 id="multi-segment-id-uniqueness">Multi-segment ID uniqueness<a class="headerlink" href="#multi-segment-id-uniqueness" title="Permanent link">&para;</a></h3>
+<p>Placeholder IDs are globally unique across all segments in a
+document. If segment 1 has <code>{#1}</code> (for <code>&lt;b&gt;</code>) and segment 2 has
+<code>{#2}</code> (for <code>&lt;i&gt;</code>), the IDs never collide. This is essential for
+XLIFF export, where <code>&lt;originalData&gt;</code> maps each ID to its actual
+tag — overlapping IDs would create ambiguity.</p>
+<h3 id="the-numbered-then-xliff-workflow">The numbered-then-XLIFF workflow<a class="headerlink" href="#the-numbered-then-xliff-workflow" title="Permanent link">&para;</a></h3>
+<p>The <code>inline_format</code> modes are designed to compose. The recommended
+production workflow is:</p>
+<ol>
+<li><code>segment(html, inline_format="numbered")</code> — extract segments
+   with compact placeholders</li>
+<li>Send segments to MT — the engine preserves <code>{#N}</code> tokens</li>
+<li><code>result.to_xliff()</code> — export an XLIFF 2.1 document with both
+   source and MT output, for human post-editing in a CAT tool</li>
+</ol>
+<p><code>to_xliff()</code> converts numbered placeholders to proper XLIFF 2.1
+<code>&lt;pc&gt;</code>/<code>&lt;ph&gt;</code> elements automatically. Data IDs are deterministic
+(<code>d{N}.s</code>/<code>d{N}.e</code> for paired, <code>d{N}</code> for standalone), so source
+and target share the same data references even when placeholders
+are reordered by the translator.</p>
+<h3 id="placeholder-validation">Placeholder validation<a class="headerlink" href="#placeholder-validation" title="Permanent link">&para;</a></h3>
+<p>Between steps 2 and 3, MT output should be validated. Real MT
+engines and LLMs frequently corrupt inline placeholders:</p>
+<ul>
+<li><strong>Dropped placeholders</strong> — the engine omits <code>{#2}</code> entirely,
+  losing a <code>&lt;b&gt;</code> tag from the output.</li>
+<li><strong>Hallucinated placeholders</strong> — the engine invents <code>{#99}</code> that
+  has no corresponding entry in <code>original_data</code>.</li>
+<li><strong>Broken pairing</strong> — <code>{#1}</code> is present but <code>{/#1}</code> is missing,
+  so the paired tag can't be reconstructed.</li>
+<li><strong>Crossed nesting</strong> — <code>{#1}{#2}...{/#1}{/#2}</code> produces invalid
+  HTML (<code>&lt;a&gt;&lt;b&gt;...&lt;/a&gt;&lt;/b&gt;</code>).</li>
+</ul>
+<p>The <code>validate()</code> method catches all of these before <code>rebuild()</code> is
+called. The caller decides the recovery strategy: retry with a
+different MT engine, fall back to the source text, or flag the
+segment for human review.</p>
+<h2 id="visualizing-the-tree">Visualizing the tree<a class="headerlink" href="#visualizing-the-tree" title="Permanent link">&para;</a></h2>
+<p>texplitter can generate tree visualizations in two formats:</p>
+<ul>
+<li><strong>SVG</strong>: <code>tree.tree.generate_svg()</code> returns an SVG string.</li>
+<li><strong>DOT</strong>: <code>tree.tree.generate_dot_representation()</code> returns a
+  Graphviz DOT string that you can render with <code>dot -Tpng</code>.</li>
+</ul>
+<p>Both are useful for debugging tokenization rules and understanding
+how the tree interprets your input.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections", "navigation.top", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
