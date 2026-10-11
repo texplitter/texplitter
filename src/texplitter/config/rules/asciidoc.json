@@ -395,7 +395,7 @@
         "type": "dot",
         "class": "BREAK",
         "description": "Matches a period followed by whitespace before specific characters.",
-        "regex": "\\.              # Match a literal period\n\\s+             # Match one or more whitespace characters\n(?=             # Positive lookahead to ensure the following condition is met\n    [<&>\\\"\\p{Lu}]|$    # one of <, &, >, \" or any uppercase Unicode letter, or end of string\n)\n",
+        "regex": "\\.              # Match a literal period\n\\s+             # Match one or more whitespace characters\n(?=             # Positive lookahead to ensure the following condition is met\n    [<&>\\\"\\p{Lu}\\p{Pi}¿¡—]|$    # one of <, &, >, \", an uppercase letter, an opening quote, ¿, ¡ or a dialogue dash (—), or end of string\n)\n",
         "callback": "default_callback",
         "sample": ".    <"
     },

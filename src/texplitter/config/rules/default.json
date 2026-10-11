@@ -243,7 +243,7 @@
         "type": "dot",
         "class": "BREAK",
         "description": "This regular expression matches a period followed by one or more whitespace characters, only if it is followed by a specific set of characters or the end of the string. The set of characters includes: '<', '&', '>', '\"', any uppercase Unicode letter, or the end of the string.  ",
-        "regex": "\\.              # Match a literal period\n\\s+             # Match one or more whitespace characters\n(?=             # Positive lookahead to ensure the following condition is met\n    [<&>\\\"\\p{Lu}]|$    # one of <, &, >, \" or any uppercase Unicode letter, or end of string\n)\n",
+        "regex": "\\.              # Match a literal period\n\\s+             # Match one or more whitespace characters\n(?=             # Positive lookahead to ensure the following condition is met\n    [<&>\\\"\\p{Lu}\\p{Pi}¿¡—]|$    # one of <, &, >, \", an uppercase letter, an opening quote, ¿, ¡ or a dialogue dash (—), or end of string\n)\n",
         "callback": "default_callback",
         "sample": ".    <"
     },

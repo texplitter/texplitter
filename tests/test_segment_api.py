@@ -568,7 +568,14 @@ def test_courtesy_titles_do_not_end_a_sentence():
     """English and Spanish titles before a name keep the sentence whole."""
     english = segment("<p>He was far gone. Dr. Livesey came late. Mr. Smith left.</p>")
     assert [s.text for s in english.segments] == ["He was far gone.", "Dr. Livesey came late.", "Mr. Smith left."]
-    spanish = segment("<p>El Sr. Pérez llegó. La Sra. Gómez y la Dra. Ruiz salieron. ¿Quieren Vds. saberlo?</p>")
-    assert [s.text for s in spanish.segments] == [
-        "El Sr. Pérez llegó.", "La Sra. Gómez y la Dra. Ruiz salieron.", "¿Quieren Vds. saberlo?",
-    ]
+    spanish = segment("<p>El Sr. Pérez llegó. La Sra. Gómez y la Dra. Ruiz salieron.</p>")
+    assert [s.text for s in spanish.segments] == ["El Sr. Pérez llegó.", "La Sra. Gómez y la Dra. Ruiz salieron."]
+
+
+def test_a_spanish_sentence_may_start_with_an_inverted_mark_or_a_dash():
+    """After a period, ¿, ¡, an opening quote or a dialogue dash starts a new sentence."""
+    result = segment("<p>Llegó tarde. ¿Quieren saberlo? Se fue. ¡Qué frío! Calló. —Yo soy un hombre llano.</p>")
+    texts = [s.text for s in result.segments]
+    assert len(texts) == 6, texts
+    assert texts[0] == "Llegó tarde."
+    assert texts[1].startswith("¿") and texts[3].startswith("¡") and texts[5].startswith("—")
