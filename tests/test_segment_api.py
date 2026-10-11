@@ -562,3 +562,13 @@ class TestValidateXliff:
         )
         errors = result.validate()
         assert any(e.code == "orphan_open" for e in errors)
+
+
+def test_courtesy_titles_do_not_end_a_sentence():
+    """English and Spanish titles before a name keep the sentence whole."""
+    english = segment("<p>He was far gone. Dr. Livesey came late. Mr. Smith left.</p>")
+    assert [s.text for s in english.segments] == ["He was far gone.", "Dr. Livesey came late.", "Mr. Smith left."]
+    spanish = segment("<p>El Sr. Pérez llegó. La Sra. Gómez y la Dra. Ruiz salieron. ¿Quieren Vds. saberlo?</p>")
+    assert [s.text for s in spanish.segments] == [
+        "El Sr. Pérez llegó.", "La Sra. Gómez y la Dra. Ruiz salieron.", "¿Quieren Vds. saberlo?",
+    ]
