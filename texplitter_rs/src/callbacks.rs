@@ -68,14 +68,15 @@ pub fn bracket_callback(token: &str) -> (String, String) {
     (label, token.to_string())
 }
 
+/// The mark as written. The segment's text is the source text: no space is
+/// added before or after a mark.
 pub fn punctuation_callback(token: &str) -> (String, String) {
-    let text = format!(" {}", token);
-    (text, token.to_string())
+    (token.to_string(), token.to_string())
 }
 
+/// ¿ and ¡ as written, joined to the word they open.
 pub fn question_mark_callback(token: &str) -> (String, String) {
-    let text = format!("{} ", token);
-    (text, token.to_string())
+    (token.to_string(), token.to_string())
 }
 
 pub fn whitespace_callback(token: &str) -> (String, String) {

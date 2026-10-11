@@ -575,7 +575,12 @@ def test_courtesy_titles_do_not_end_a_sentence():
 def test_a_spanish_sentence_may_start_with_an_inverted_mark_or_a_dash():
     """After a period, ¿, ¡, an opening quote or a dialogue dash starts a new sentence."""
     result = segment("<p>Llegó tarde. ¿Quieren saberlo? Se fue. ¡Qué frío! Calló. —Yo soy un hombre llano.</p>")
-    texts = [s.text for s in result.segments]
-    assert len(texts) == 6, texts
-    assert texts[0] == "Llegó tarde."
-    assert texts[1].startswith("¿") and texts[3].startswith("¡") and texts[5].startswith("—")
+    assert [s.text for s in result.segments] == [
+        "Llegó tarde.", "¿Quieren saberlo?", "Se fue.", "¡Qué frío!", "Calló.", "—Yo soy un hombre llano.",
+    ]
+
+
+def test_marks_keep_the_spacing_of_the_source():
+    """No space is added after ¿ or ¡, nor before ; or =."""
+    result = segment("<p>Es un hombre llano; quiere rom. Dijo ¿cuándo? y luego ¡basta! a=b</p>")
+    assert " ".join(s.text for s in result.segments) == "Es un hombre llano; quiere rom. Dijo ¿cuándo? y luego ¡basta! a=b"
