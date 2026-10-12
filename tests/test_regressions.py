@@ -34,9 +34,10 @@ def test_an_epub_chapter_is_split_into_sentences(name, sentence):
     assert any(sentence in t for t in result)
 
 
-@pytest.mark.xfail(strict=True, reason="text rules run inside attribute values: a ')' and '.' in a title attribute leave a stray </div>")
 @pytest.mark.parametrize("name", ["p17-chap-12-en.html", "p17-chap-12-es.html"])
 def test_an_epub_chapter_leaves_no_markup_in_its_segments(name):
+    """A title attribute ending in '.' lost its closing '">' to the quote swap, leaving
+    stray </div> in segments."""
     result = texts((FIXTURES / name).read_text(encoding="utf-8"))
     assert not [t for t in result if "</div>" in t]
 
@@ -90,10 +91,52 @@ def test_the_paragraph_after_a_void_image_survives():
     assert texts('<html><body>\n<p>A one. <img src="x.png" alt="A map"> More.</p>\n<p>B two.</p>\n</body></html>')[-1] == "B two."
 
 
-@pytest.mark.xfail(strict=True, raises=BaseException,
-                   reason="parentheses and a period in an attribute value panic the splitter (splitter.rs: slice index starts at 39 but ends at 38)")
 def test_parentheses_and_a_period_in_an_attribute_value():
-    assert texts('<div><section title="Title (with parens)."><h2>Head</h2><div>One. Two.</div></section></div>') == ["Head", "One.", "Two."]
+    """The period-after-quote swap ran inside markup: title="Title (with parens)." lost
+    its closing '">', the element never closed and the splitter panicked."""
+    doc = '<div><section title="Title (with parens)."><h2>Head</h2><div>One. Two.</div></section></div>'
+    result = segment(doc)
+    assert [s.text for s in result.segments] == ["Head", "One.", "Two."]
+    assert ("section/title~0", "Title (with parens).") in [tuple(a) for a in result.attributes]
+    assert result.rebuild() == doc
+
+
+# --- punctuation and closing quotes (American English to logical placement) ---
+
+
+@pytest.mark.parametrize("source,expected", [
+    ('<p>He called it "the end."</p>', 'He called it "the end".'),
+    ("<p>He called it 'the end.'</p>", "He called it 'the end'."),
+    ("<p>He called it “the end.”</p>", "He called it “the end”."),
+    ("<p>He called it ‘the end.’</p>", "He called it ‘the end’."),
+    ('<p>"The end," he said.</p>', '"The end", he said.'),
+    ("<p>“The end,” he said.</p>", "“The end”, he said."),
+])
+def test_a_period_or_comma_inside_closing_quotes_moves_after_them(source, expected):
+    """American English writes the period and comma inside the closing quotes; Spanish,
+    like most languages, after them (RAE). The swap now covers the comma and
+    typographic quotes."""
+    assert texts(source) == [expected]
+
+
+def test_the_quote_swap_never_touches_markup():
+    doc = '<p title="He said &quot;go.&quot;" data-x="a." class=\'b.\'>He said "go."</p>'
+    result = segment(doc)
+    assert [s.text for s in result.segments] == ['He said "go".']
+    attrs = dict(tuple(a) for a in result.attributes)
+    assert attrs["p/data-x~0"] == "a."
+    assert attrs["p/class~0"] == "b."
+
+
+def test_apostrophes_are_not_quotes_for_the_swap():
+    assert texts("<p>It's the dogs' toys.</p>") == ["It's the dogs' toys."]
+
+
+def test_the_swap_can_be_turned_off_for_a_source_that_is_not_american():
+    doc = '<p>He called it "the end."</p>'
+    result = segment(doc, move_punctuation_after_quotes=False)
+    assert [s.text for s in result.segments] == ['He called it "the end."']
+    assert result.rebuild() == doc
 
 
 # --- sentence breaks on rebuild -----------------------------------------------

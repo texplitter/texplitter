@@ -734,6 +734,7 @@ def segment(
     ruleset: str = "default",
     translatable_attrs: Optional[List[str]] = None,
     inline_format: str = "numbered",
+    move_punctuation_after_quotes: bool = True,
 ) -> SegmentResult:
     """Segment a markup document into classified translation units.
 
@@ -760,6 +761,10 @@ def segment(
             elements (``<pc>`` for paired tags, ``<ph>`` for standalone
             tags) with original tag data in ``result.original_data``.
             Designed for interchange with CAT tools.
+        move_punctuation_after_quotes: Move a period or comma written
+            inside closing quotes after them (American English to the order
+            of Spanish and most other languages). Markup is never touched.
+            Default ``True``; turn it off for a source already in that order.
 
     Returns:
         A ``SegmentResult`` with template, segments, attributes, and
@@ -791,7 +796,7 @@ def segment(
             f"Use 'numbered' (default) or 'xliff'."
         )
 
-    tok = Tokenizer(ruleset)
+    tok = Tokenizer(ruleset, move_punctuation_after_quotes=move_punctuation_after_quotes)
     tokens = tok.tokenize(text)
     tree = SegmentTree(tokens).tree
 

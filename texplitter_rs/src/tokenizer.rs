@@ -45,6 +45,57 @@ pub struct Tokenizer {
     nesting_errors: Vec<IndexMap<String, Value>>,
     error: bool,
     symbol_counter: Counter,
+    /// Move a period or comma written inside closing quotes after them, as
+    /// American English writes it and most other languages do not. On by
+    /// default; off for a source already in logical order.
+    move_punctuation_after_quotes: bool,
+}
+
+/// Moves a period or comma that sits just before a closing quote (`"`, `'`,
+/// `”`, `’`) after it: American English `"the end."` becomes `"the end".`,
+/// the order of Spanish (RAE) and most other languages. Text only: nothing
+/// between `<` and `>` is touched, quoted attribute values included, so a
+/// tag such as `<p title="Title.">` keeps its closing `">`.
+pub fn move_punctuation_after_quotes(text: &str) -> String {
+    let chars: Vec<char> = text.chars().collect();
+    let mut out = String::with_capacity(text.len());
+    let mut in_tag = false;
+    let mut value_quote: Option<char> = None;
+    let mut i = 0;
+    while i < chars.len() {
+        let c = chars[i];
+        if in_tag {
+            out.push(c);
+            match value_quote {
+                Some(q) if c == q => value_quote = None,
+                Some(_) => {}
+                None if c == '"' || c == '\'' => value_quote = Some(c),
+                None if c == '>' => in_tag = false,
+                None => {}
+            }
+            i += 1;
+            continue;
+        }
+        let opens_tag = c == '<'
+            && chars
+                .get(i + 1)
+                .map_or(false, |n| n.is_ascii_alphabetic() || matches!(n, '/' | '!' | '?'));
+        if opens_tag {
+            in_tag = true;
+            out.push(c);
+            i += 1;
+            continue;
+        }
+        if (c == '.' || c == ',') && chars.get(i + 1).map_or(false, |n| matches!(n, '"' | '\'' | '\u{201D}' | '\u{2019}')) {
+            out.push(chars[i + 1]);
+            out.push(c);
+            i += 2;
+            continue;
+        }
+        out.push(c);
+        i += 1;
+    }
+    out
 }
 
 impl Tokenizer {
@@ -93,6 +144,7 @@ impl Tokenizer {
             nesting_errors: vec![],
             error: false,
             symbol_counter: Counter::new(),
+            move_punctuation_after_quotes: true,
         })
     }
 
@@ -107,9 +159,18 @@ impl Tokenizer {
         Callback::Default
     }
 
+    /// Whether a period or comma inside closing quotes moves after them.
+    pub fn set_move_punctuation_after_quotes(&mut self, value: bool) {
+        self.move_punctuation_after_quotes = value;
+    }
+
     pub fn tokenize(&mut self, intext: &str) -> Result<Vec<IndexMap<String, Value>>, Box<dyn Error>> {
         info!("Starting tokenization");
-        let intext = intext.replace(".'", "'.").replace(".\"", "\".");
+        let intext = if self.move_punctuation_after_quotes {
+            move_punctuation_after_quotes(intext)
+        } else {
+            intext.to_string()
+        };
         let mut _position = 0;
         self.tokens.clear();
         self.unmatched_tags.clear();

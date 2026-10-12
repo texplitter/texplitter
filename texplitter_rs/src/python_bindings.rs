@@ -303,6 +303,12 @@ impl PyTokenizer {
         Ok(PyTokenizer { inner })
     }
 
+    /// Whether a period or comma inside closing quotes moves after them
+    /// (American English to the order of most other languages). On by default.
+    fn set_move_punctuation_after_quotes(&mut self, value: bool) {
+        self.inner.set_move_punctuation_after_quotes(value);
+    }
+
     /// Tokenize `intext` and return a `list[dict]` where each dict has keys
     /// `token_class`, `token_type`, `text`, `label`, `start`, `end`.
     fn tokenize<'py>(
