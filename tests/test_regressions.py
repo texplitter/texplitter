@@ -191,3 +191,33 @@ def test_translated_sentences_rebuild_with_one_space_between_them():
 def test_a_void_element_in_xliff_inline_format_is_a_ph():
     result = segment('<p>See <img src="x.png" alt="map"> here.</p>', inline_format="xliff")
     assert [s.text for s in result.segments] == ['See <ph id="1" dataRef="d1"/> here.']
+
+
+# --- question and exclamation marks -------------------------------------------
+
+
+@pytest.mark.parametrize("source,expected", [
+    # Spanish (RAE): after ? or !, a lower-case word continues the same sentence.
+    ("<p>—¡Mil carronadas! gritó él, ¡una semana!</p>", ["—¡Mil carronadas! gritó él, ¡una semana!"]),
+    ("<p>—¿Herido? dijo el Doctor; ¡qué va á estarlo! Ni más ni menos.</p>",
+     ["—¿Herido? dijo el Doctor; ¡qué va á estarlo!", "Ni más ni menos."]),
+    ("<p>—¡Ya está hecho! dijo entonces el ciego y se fue.</p>", ["—¡Ya está hecho! dijo entonces el ciego y se fue."]),
+    # English: a speech tag after the closing quote continues the sentence.
+    ("<p>“Were you addressing me, sir?” says the doctor. He waited.</p>",
+     ["“Were you addressing me, sir?” says the doctor.", "He waited."]),
+    # A new sentence after the mark, with or without a closing quote.
+    ('<p>"Go!" He left.</p>', ['"Go!"', "He left."]),
+    ("<p>Is it? Yes. Go!</p>", ["Is it?", "Yes.", "Go!"]),
+    ("<p>What?! No way.</p>", ["What?!", "No way."]),
+    ("<p>¿Vienes? ¿O no?</p>", ["¿Vienes?", "¿O no?"]),
+    # Not a sentence end: a question mark in a URL.
+    ("<p>See https://example.com/a?b=1 for more.</p>", ["See https://example.com/a?b=1 for more."]),
+])
+def test_question_and_exclamation_marks_end_a_sentence_only_before_a_new_one(source, expected):
+    result = segment(source)
+    assert [s.text for s in result.segments] == expected
+    assert result.rebuild() == source
+
+
+def test_an_exclamation_before_japanese_text_still_ends_the_sentence():
+    assert len(texts("<p>すごい!こんにちは</p>")) == 2
