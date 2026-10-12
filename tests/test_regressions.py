@@ -42,7 +42,6 @@ def test_an_epub_chapter_leaves_no_markup_in_its_segments(name):
     assert not [t for t in result if "</div>" in t]
 
 
-@pytest.mark.xfail(strict=True, reason="<meta charset=...> without a slash is counted as an open element and the last paragraph is dropped")
 def test_the_last_paragraph_survives_a_head_with_a_void_meta():
     result = texts((FIXTURES / "treasure-island-en.html").read_text(encoding="utf-8"))
     assert result[-1] == "It was the second death I had known, and the sorrow of the first was still fresh in my heart."
@@ -86,9 +85,36 @@ def test_a_line_break_inside_a_sentence_stays_an_inline_placeholder():
     assert texts("<p>Press <br/> and wait. Then go.</p>") == ["Press {#1} and wait.", "Then go."]
 
 
-@pytest.mark.xfail(strict=True, reason="<img> without a slash is counted as an open element; the paragraph after it is lost")
 def test_the_paragraph_after_a_void_image_survives():
-    assert texts('<html><body>\n<p>A one. <img src="x.png" alt="A map"> More.</p>\n<p>B two.</p>\n</body></html>')[-1] == "B two."
+    """HTML never closes a void element; <img> without a slash was waited for as an
+    open element, and the text after it was lost."""
+    doc = '<html><body>\n<p>A one. <img src="x.png" alt="A map"> More.</p>\n<p>B two.</p>\n</body></html>'
+    result = segment(doc)
+    assert [s.text for s in result.segments] == ["A one.", "{#1} More.", "B two."]
+    assert ("img/alt~0", "A map") in [tuple(a) for a in result.attributes]
+    assert result.rebuild() == doc
+
+
+@pytest.mark.parametrize("doc,expected", [
+    ('<html><head><meta charset="utf-8"><title>T</title></head><body>\n<p>A one.</p>\n<p>B two.</p>\n</body></html>', ["T", "A one.", "B two."]),
+    ("<p>One line<hr>Two line.</p>", ["One line{#1}Two line."]),
+    ('<div><input type="text" value="x"><p>After.</p></div>', ["After."]),
+])
+def test_void_elements_without_a_slash_close_themselves(doc, expected):
+    result = segment(doc)
+    if expected is not None:
+        assert [s.text for s in result.segments] == expected
+    assert result.rebuild() == doc
+
+
+def test_an_xml_link_with_content_is_not_void():
+    """In RSS and other XML, <link> and <meta> hold content; only an element with no
+    closing tag is taken as void."""
+    doc = "<item><title>News today.</title><link>https://example.com/a</link><description>A short item.</description></item>"
+    result = segment(doc)
+    assert "News today." in [s.text for s in result.segments]
+    assert "A short item." in [s.text for s in result.segments]
+    assert result.rebuild() == doc
 
 
 def test_parentheses_and_a_period_in_an_attribute_value():
@@ -160,3 +186,8 @@ def test_translated_sentences_rebuild_with_one_space_between_them():
     result.segments[0].text = "Hola {#1}mundo{/#1}."
     result.segments[1].text = "Adiós {#2}amigo{/#2}."
     assert result.rebuild() == "<p>Hola <b>mundo</b>. Adiós <i>amigo</i>.</p>"
+
+
+def test_a_void_element_in_xliff_inline_format_is_a_ph():
+    result = segment('<p>See <img src="x.png" alt="map"> here.</p>', inline_format="xliff")
+    assert [s.text for s in result.segments] == ['See <ph id="1" dataRef="d1"/> here.']

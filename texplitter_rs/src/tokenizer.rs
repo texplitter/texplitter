@@ -51,6 +51,57 @@ pub struct Tokenizer {
     move_punctuation_after_quotes: bool,
 }
 
+/// HTML's void elements, which never take content or a closing tag.
+const VOID_ELEMENTS: &[&str] = &[
+    "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr",
+];
+
+/// Marks a void element written without a slash (`<meta charset="utf-8">`,
+/// `<img src="x.png">`, `<hr>`) as self-closing, as `<img ... />` is. An
+/// element with a void name whose closing tag follows before its next
+/// opening (`<link>https://...</link>` in RSS and other XML) holds content
+/// and is left as it is.
+fn mark_void_elements(tokens: &mut [IndexMap<String, Value>]) {
+    let class_of = |t: &IndexMap<String, Value>| t["token_class"].as_str().unwrap_or("").to_string();
+    let name_of = |t: &IndexMap<String, Value>| t["label"].as_str().unwrap_or("").to_ascii_lowercase();
+    let mut next_close: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    let mut next_open: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    let mut void_openings: Vec<usize> = Vec::new();
+    for i in (0..tokens.len()).rev() {
+        let class = class_of(&tokens[i]);
+        let name = name_of(&tokens[i]);
+        if !VOID_ELEMENTS.contains(&name.as_str()) {
+            continue;
+        }
+        match class.as_str() {
+            "CLOSE_TAG" => {
+                next_close.insert(name, i);
+            }
+            "OPEN_TAG" | "BEGINNING_TAG" => {
+                let closed = match (next_close.get(&name), next_open.get(&name)) {
+                    (Some(c), Some(o)) => c < o,
+                    (Some(_), None) => true,
+                    _ => false,
+                };
+                if !closed {
+                    void_openings.push(i);
+                }
+                next_open.insert(name, i);
+            }
+            _ => {}
+        }
+    }
+    for i in void_openings {
+        if class_of(&tokens[i]) == "OPEN_TAG" {
+            tokens[i].insert("token_class".to_string(), Value::String("SINGLE_TAG".to_string()));
+        } else if let Some(end) = (i + 1..tokens.len()).find(|&j| matches!(class_of(&tokens[j]).as_str(), "END_OPEN_TAG" | "END_CLOSE_TAG")) {
+            if class_of(&tokens[end]) == "END_OPEN_TAG" {
+                tokens[end].insert("token_class".to_string(), Value::String("END_CLOSE_TAG".to_string()));
+            }
+        }
+    }
+}
+
 /// Moves a period or comma that sits just before a closing quote (`"`, `'`,
 /// `”`, `’`) after it: American English `"the end."` becomes `"the end".`,
 /// the order of Spanish (RAE) and most other languages. Text only: nothing
@@ -231,7 +282,15 @@ impl Tokenizer {
             token.insert("end".to_string(), Value::Number(end.into()));
 
             self.tokens.push(token.clone());
+        }
 
+        // Void elements first: their end decides how the nesting is read.
+        mark_void_elements(&mut self.tokens);
+
+        // Nesting check over the final tokens, in source order.
+        let final_tokens = self.tokens.clone();
+        for token in &final_tokens {
+            let token_class = token["token_class"].as_str().unwrap_or("");
             match token_class {
                 "OPEN_TAG" | "BEGINNING_TAG" => {
                     tag_stack.push(token.clone());

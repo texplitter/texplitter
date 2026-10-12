@@ -25,6 +25,21 @@ _OPEN_TAG_RE = re.compile(
 _CLOSE_TAG_RE = re.compile(
     r'</([a-zA-Z][a-zA-Z0-9]*)>'
 )
+# HTML void elements written without a slash (<img src="x.png">, <hr>):
+# HTML never closes them, so they are standalone codes like <img .../>.
+_VOID_TAG_RE = re.compile(
+    r'<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)\b([^>]*?)(?<!/)>',
+    re.IGNORECASE,
+)
+
+
+def _void_tag_matches(text: str) -> List[re.Match]:
+    """Void-element tags in a segment; one whose closing tag follows (XML such
+    as <link>...</link>) holds content and is left to the paired-tag pass."""
+    return [
+        m for m in _VOID_TAG_RE.finditer(text)
+        if not re.search(rf'</{m.group(1)}\s*>', text[m.end():], re.IGNORECASE)
+    ]
 
 
 def _numbered_inline(
@@ -64,8 +79,11 @@ def _numbered_inline(
 
     result = segment_text
 
-    # Pass 1: Replace self-closing tags with {N}
-    self_closing_matches = list(_SELF_CLOSING_TAG_RE.finditer(result))
+    # Pass 1: Replace self-closing tags and void elements with {N}
+    self_closing_matches = sorted(
+        list(_SELF_CLOSING_TAG_RE.finditer(result)) + _void_tag_matches(result),
+        key=lambda m: m.start(),
+    )
     for match in reversed(self_closing_matches):
         code_id += 1
         original_tag = _restore_attrs(match.group(0))
@@ -183,7 +201,10 @@ def _xliff_inline(
 
     # Pass 1: Replace self-closing tags with <ph/> elements
     # Must do this before paired tags to avoid matching self-closing as open
-    self_closing_matches = list(_SELF_CLOSING_TAG_RE.finditer(result))
+    self_closing_matches = sorted(
+        list(_SELF_CLOSING_TAG_RE.finditer(result)) + _void_tag_matches(result),
+        key=lambda m: m.start(),
+    )
     for match in reversed(self_closing_matches):
         code_id += 1
         data_id += 1
