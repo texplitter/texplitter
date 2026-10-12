@@ -2116,8 +2116,22 @@ impl SegmentTree {
                 tag_stack.pop();
                 last_action = "popRC";
             }
+            if class == TokenClass::SingleTag && tag_stack.is_empty() {
+                // A bare self-closing element (`<p/>`, `<span/>`) outside any
+                // open element is markup of its own: it closes the text run
+                // before it and is emitted alone, as a self-closing element
+                // with attributes is. Left in the run, it made the text and
+                // every block after it one translatable segment.
+                if !current_sublist.is_empty() {
+                    sublists.push((balanced, std::mem::take(&mut current_sublist)));
+                }
+                sublists.push((false, vec![token.clone()]));
+                balanced = true;
+                last_action = "pop";
+                continue;
+            }
             if class == TokenClass::SingleTag {
-                // Self-closing: push + pop in one step.
+                // Self-closing inside an open element: push + pop in one step.
                 tag_stack.push(token["label"].as_str().unwrap().to_string());
                 tag_stack.pop();
                 last_action = "pop";
@@ -2191,6 +2205,11 @@ impl SegmentTree {
             let in_segment = tokens[1..tokens.len() - 1].to_vec();
             let attributes = vec![];
             (open_tag, close_tag, text_tag, in_segment, attributes)
+        } else if first_class == TokenClass::SingleTag {
+            // A bare self-closing element: the tag itself, no body, no close tag.
+            let open_tag = tokens[0]["text"].as_str().unwrap().to_string();
+            let text_tag = open_tag.trim().trim_start_matches('<').trim_end_matches('>').trim_end_matches('/').trim().to_string();
+            (open_tag, String::new(), text_tag, vec![], vec![])
         } else if first_class == TokenClass::BeginningTag {
             // Find the index of the terminating END_OPEN_TAG / END_CLOSE_TAG.
             // Structurally, the tokenizer always emits one of these after

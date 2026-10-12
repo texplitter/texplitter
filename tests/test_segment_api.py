@@ -600,3 +600,12 @@ def test_xhtml_with_namespaced_attributes_is_read_as_markup():
     assert "You must keep records." in texts
     assert not any("<" in t or "@" in t for t in texts), texts
     assert any(k.endswith("epub:type") or "epub:type" in k for k, _ in result.attributes)
+
+
+
+def test_a_bare_self_closing_element_is_markup_and_survives_a_rebuild():
+    """<p/> and <span/> between blocks keep the blocks apart, as in an EPUB chapter."""
+    doc = '<div>A first block.</div><p/><div>A second block. And more.</div><span/><div>Last.</div>'
+    result = segment(doc)
+    assert [s.text for s in result.segments] == ["A first block.", "A second block.", "And more.", "Last."]
+    assert result.rebuild() == doc
