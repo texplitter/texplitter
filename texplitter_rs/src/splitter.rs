@@ -745,7 +745,10 @@ impl TreeNode {
         let index_of = |segments: &Vec<(usize, String)>| segment_index + (segments.len() - start_segments_len);
 
         let mut work: Vec<Frame> = vec![Frame::Visit { node: self, end: end.to_string() }];
-        let mut results: Vec<String> = Vec::new();
+        // Each result carries whether its subtree's last segment took the
+        // `end` it was given (the operator of the break after it) into the
+        // segment text: then the template must not write that operator again.
+        let mut results: Vec<(String, bool)> = Vec::new();
 
         while let Some(frame) = work.pop() {
             match frame {
@@ -768,9 +771,9 @@ impl TreeNode {
                                 let mut s = leading;
                                 s.push_str(&format!("%%{}%%", new_index));
                                 s.push_str(&trailing);
-                                results.push(s);
+                                results.push((s, !end.is_empty()));
                             } else {
-                                results.push(String::new());
+                                results.push((String::new(), false));
                             }
                         } else {
                             // Same `end` is passed to every child in the old
@@ -840,46 +843,58 @@ impl TreeNode {
                             let mut s = leading;
                             s.push_str(&format!("%%{}%%", new_index));
                             s.push_str(&trailing);
-                            results.push(s);
+                            results.push((s, !end.is_empty()));
                         } else {
-                            results.push(String::new());
+                            results.push((String::new(), false));
                         }
                     }
                 },
                 Frame::FinalizeSingle { open, close, n } => {
                     let start = results.len() - n;
                     let mut s = open;
-                    for child_str in results.drain(start..) {
+                    let mut absorbed = false;
+                    for (child_str, child_absorbed) in results.drain(start..) {
                         s.push_str(&child_str);
+                        absorbed = child_absorbed;
                     }
                     if let Some(close) = close {
                         s.push_str(&close);
                     }
-                    results.push(s);
+                    results.push((s, absorbed));
                 }
                 Frame::FinalizeBinary { operator } => {
-                    let right = results.pop().expect("binary right missing");
-                    let left = results.pop().expect("binary left missing");
-                    results.push(format!("{}{}{}", left, operator, right));
+                    let (right, _) = results.pop().expect("binary right missing");
+                    let (left, left_absorbed) = results.pop().expect("binary left missing");
+                    // The sentence before the break was given the operator
+                    // as its end; when its segment took it, the operator is
+                    // already in that segment and its spaces are `{sp}`
+                    // after the placeholder.
+                    if left_absorbed {
+                        results.push((format!("{}{}", left, right), false));
+                    } else {
+                        results.push((format!("{}{}{}", left, operator, right), false));
+                    }
                 }
                 Frame::FinalizeBinaryTemplate { operator } => {
-                    let right = results.pop().expect("binary_template right missing");
-                    let left = results.pop().expect("binary_template left missing");
-                    results.push(format!("{}{}{}", left, operator, right));
+                    let (right, _) = results.pop().expect("binary_template right missing");
+                    let (left, _) = results.pop().expect("binary_template left missing");
+                    results.push((format!("{}{}{}", left, operator, right), false));
                 }
                 Frame::FinalizeMultipleConcat { n } => {
                     let start = results.len() - n;
                     let mut s = String::new();
-                    for child_str in results.drain(start..) {
+                    let mut absorbed = false;
+                    for (child_str, child_absorbed) in results.drain(start..) {
                         s.push_str(&child_str);
+                        absorbed = child_absorbed;
                     }
-                    results.push(s);
+                    results.push((s, absorbed));
                 }
             }
         }
 
         debug_assert_eq!(results.len(), 1);
-        let final_result = results.pop().unwrap();
+        let (final_result, _) = results.pop().unwrap();
         (index_of(segments), final_result)
     }
 
@@ -1910,11 +1925,15 @@ impl SegmentTree {
                                             vec![],
                                         )));
                                     } else if sublist.last().map_or(false, |token| {
+                                        // SingleTag: a bare self-closing element emitted
+                                        // as a markup group of its own; it is built as
+                                        // a self-closing element with attributes is.
                                         matches!(
                                             TokenClass::of(token),
                                             TokenClass::CloseTag
                                                 | TokenClass::CloseBracket
                                                 | TokenClass::EndCloseTag
+                                                | TokenClass::SingleTag
                                         )
                                     }) {
                                         let (open_tag, close_tag, text_tag, in_segment, attributes) =
@@ -2122,10 +2141,13 @@ impl SegmentTree {
             // the run, it made every block after it one translatable
             // segment. Inside a text run (`Press <br/> and wait.`) it stays
             // the protected inline node it is meant to be.
-            let no_text_yet = current_sublist
-                .iter()
-                .all(|t| t["text"].as_str().map_or(true, |text| text.trim().is_empty()));
-            if class == TokenClass::SingleTag && tag_stack.is_empty() && no_text_yet {
+            // Checked only for such a tag, never per token: the run can be long.
+            let no_text_yet = || {
+                current_sublist
+                    .iter()
+                    .all(|t| t["text"].as_str().map_or(true, |text| text.trim().is_empty()))
+            };
+            if class == TokenClass::SingleTag && tag_stack.is_empty() && no_text_yet() {
                 if !current_sublist.is_empty() {
                     sublists.push((balanced, std::mem::take(&mut current_sublist)));
                 }

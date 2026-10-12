@@ -91,3 +91,26 @@ def test_the_paragraph_after_a_void_image_survives():
                    reason="parentheses and a period in an attribute value panic the splitter (splitter.rs: slice index starts at 39 but ends at 38)")
 def test_parentheses_and_a_period_in_an_attribute_value():
     assert texts('<div><section title="Title (with parens)."><h2>Head</h2><div>One. Two.</div></section></div>') == ["Head", "One.", "Two."]
+
+
+# --- sentence breaks on rebuild -----------------------------------------------
+
+
+@pytest.mark.parametrize("doc", [
+    "<p>One. Two.</p>",
+    "<p>A one. B two. C three.</p>",
+    "<p>Is it? Yes. Go!</p>",
+    "<p>Hello <b>world</b>. Goodbye <i>friend</i>.</p>",
+    "<p>Leading <b>x</b> end.</p>\n<p> spaced </p>",
+])
+def test_a_document_rebuilds_exactly_from_its_own_segments(doc):
+    """The break between sentences ('. ', '?', '!') was written twice: once in the
+    sentence before it, once in the template ('One.{sp}. Two.', 'Go!!')."""
+    assert segment(doc).rebuild() == doc
+
+
+def test_translated_sentences_rebuild_with_one_space_between_them():
+    result = segment("<p>Hello <b>world</b>. Goodbye <i>friend</i>.</p>")
+    result.segments[0].text = "Hola {#1}mundo{/#1}."
+    result.segments[1].text = "Adiós {#2}amigo{/#2}."
+    assert result.rebuild() == "<p>Hola <b>mundo</b>. Adiós <i>amigo</i>.</p>"

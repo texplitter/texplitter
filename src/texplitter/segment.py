@@ -402,6 +402,9 @@ class SegmentResult:
             if seg.kind == "text":
                 result = result.replace(f"%%{seg.index}%%", seg.text)
 
+        # Spaces the splitter kept beside a placeholder as {sp}
+        result = result.replace("{sp}", " ")
+
         # Substitute non-translatable attribute placeholders
         for attr_key, attr_value in self.attributes:
             result = result.replace(f"@{attr_key}@", attr_value)
