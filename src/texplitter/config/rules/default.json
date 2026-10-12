@@ -83,7 +83,7 @@
         "type": "open_close_tag",
         "class": "SINGLE_TAG",
         "description": " This regular expression matches an optional leading whitespace, followed by an opening angle bracket, a tag name consisting of one or more alphanumeric characters, optional whitespace inside the tag, a self-closing slash, a closing angle bracket, and optional trailing whitespace. ",
-        "regex": "\\s*              # Optional leading whitespace\n<                # Opening angle bracket\n[a-zA-Z0-9]+     # Tag name: one or more alphanumeric characters\n\\s*              # Optional whitespace (inside the tag)\n/                # Self-closing tag slash\n>                # Closing angle bracket\n\\s*              # Optional trailing whitespace\n",
+        "regex": "\\s*              # Optional leading whitespace\n<                # Opening angle bracket\n[a-zA-Z0-9_:\\-]+  # Tag name: letters, digits, _ : - (epub:switch)\n\\s*              # Optional whitespace (inside the tag)\n/                # Self-closing tag slash\n>                # Closing angle bracket\n\\s*              # Optional trailing whitespace\n",
         "callback": "default_callback",
         "sample": "<openclose />"
     },
@@ -91,7 +91,7 @@
         "type": "left_tag",
         "class": "BEGINNING_TAG",
         "description": "This regular expression matches an opening HTML or XML tag with attributes. The tag name consists of alphanumeric characters and hyphens. The pattern ensures that the tag is followed by at least one attribute, which starts with an alphabetic character.  ",
-        "regex": "\\s*                # Optional leading whitespace\n<                  # Opening angle bracket\n[a-zA-Z0-9\\-]+   # Tag name: one or more alphanumeric characters or hyphens\n\\s                 # At least one whitespace character\n(?=\\s*[a-zA-Z])    # Positive lookahead to ensure an attribute starting with an alphabetic character\n",
+        "regex": "\\s*                # Optional leading whitespace\n<                  # Opening angle bracket\n[a-zA-Z0-9_:\\-]+  # Tag name: letters, digits, _ : - (epub:switch)\n\\s                 # At least one whitespace character\n(?=\\s*[a-zA-Z])    # Positive lookahead to ensure an attribute starting with an alphabetic character\n",
         "callback": "left_tag_callback",
         "sample": "<div class=\"container\">"
     },
@@ -115,7 +115,7 @@
         "type": "mid_tag",
         "class": "MIDDLE_TAG",
         "description": "This regular expression matches attribute assignments within HTML or XML tags. It captures optional leading quotes or punctuation, followed by optional whitespace, an attribute name consisting of letters and hyphens, an equals sign, and then a starting quote or punctuation for the attribute value.  ",
-        "regex": "(                   # Start of the first capturing group\n    [\\\"\\p{Pf}\\p{Pi}\\']?  # Optional leading quote or punctuation\n    (\\s)*           # Optional whitespace\n)?                  # End of the first capturing group, making it optional\n[a-zA-Z\\-]*?        # Attribute name: zero or more letters or hyphens, non-greedy\n=                   # Equals sign\n[\\\"\\p{Pf}\\p{Pi}\\']  # Starting quote or punctuation for the attribute value\n",
+        "regex": "(                   # Start of the first capturing group\n    [\\\"\\p{Pf}\\p{Pi}\\']?  # Optional leading quote or punctuation\n    (\\s)*           # Optional whitespace\n)?                  # End of the first capturing group, making it optional\n[a-zA-Z0-9_:.\\-]*?  # Attribute name, as XML allows: letters, digits, _ : . -, non-greedy (xml:lang, epub:type)\n=                   # Equals sign\n[\\\"\\p{Pf}\\p{Pi}\\']  # Starting quote or punctuation for the attribute value\n",
         "callback": "mid_tag_callback",
         "sample": "\"data-attr=\""
     },
@@ -123,7 +123,7 @@
         "type": "close_tag",
         "class": "CLOSE_TAG",
         "description": "This regular expression matches XML or HTML closing tags, including any leading or trailing whitespaces. The tag name is expected to consist of alphanumeric characters and hyphens. Whitespaces around the tag are optional and accounted for.  ",
-        "regex": "\\s*               # Optional leading whitespace\n</                # Opening angle bracket and forward slash for closing tag\n[a-zA-Z0-9\\-]+    # Tag name: one or more alphanumeric characters or hyphens\n>                 # Closing angle bracket\n\\s*               # Optional trailing whitespace\n",
+        "regex": "\\s*               # Optional leading whitespace\n</                # Opening angle bracket and forward slash for closing tag\n[a-zA-Z0-9_:\\-]+   # Tag name: letters, digits, _ : - (epub:switch)\n>                 # Closing angle bracket\n\\s*               # Optional trailing whitespace\n",
         "callback": "close_tag_callback",
         "sample": "</div>"
     },
@@ -131,7 +131,7 @@
         "type": "open_tag",
         "class": "OPEN_TAG",
         "description": "This regular expression matches an opening XML or HTML tag, including any leading or trailing whitespaces. The tag name is expected to consist of alphanumeric characters and hyphens.  ",
-        "regex": "\\s*               # Optional leading whitespace\n<                 # Opening angle bracket\n[\\w-]+            # Tag name: one or more alphanumeric characters or hyphens\n>                 # Closing angle bracket\n\\s*               # Optional trailing whitespace\n",
+        "regex": "\\s*               # Optional leading whitespace\n<                 # Opening angle bracket\n[\\w:-]+           # Tag name: letters, digits, _ : - (epub:switch)\n>                 # Closing angle bracket\n\\s*               # Optional trailing whitespace\n",
         "callback": "open_tag_callback",
         "sample": "<div>"
     },

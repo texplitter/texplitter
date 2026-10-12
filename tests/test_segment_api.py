@@ -584,3 +584,19 @@ def test_marks_keep_the_spacing_of_the_source():
     """No space is added after ¿ or ¡, nor before ; or =."""
     result = segment("<p>Es un hombre llano; quiere rom. Dijo ¿cuándo? y luego ¡basta! a=b</p>")
     assert " ".join(s.text for s in result.segments) == "Es un hombre llano; quiere rom. Dijo ¿cuándo? y luego ¡basta! a=b"
+
+
+def test_xhtml_with_namespaced_attributes_is_read_as_markup():
+    """xml:lang, xmlns:epub and epub:type are attributes, as in an EPUB chapter."""
+    doc = (
+        '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en">'
+        '<body><section epub:type="chapter" id="c12"><h1>Other Deductions</h1>'
+        '<div style="margin-top: 0.4em;">You must keep records. See <a class="link" href="ch1.xhtml#r">Records</a> in chapter 1.</div>'
+        '</section></body></html>'
+    )
+    result = segment(doc)
+    texts = [s.text for s in result.segments]
+    assert "Other Deductions" in texts
+    assert "You must keep records." in texts
+    assert not any("<" in t or "@" in t for t in texts), texts
+    assert any(k.endswith("epub:type") or "epub:type" in k for k, _ in result.attributes)
