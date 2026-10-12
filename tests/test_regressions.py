@@ -64,17 +64,20 @@ def test_an_image_alt_text_is_kept_as_a_translatable_attribute():
 # --- defects in inline self-closing elements ---------------------------------
 
 
-@pytest.mark.xfail(strict=True, reason="the words between an inline self-closing element with attributes and the next period are lost")
 def test_text_after_an_xliff_inline_code_is_kept():
-    """An XLIFF 2.1 segment as the Format Service hands it over (04 §2.1): <ph/> is an inline code."""
-    result = texts('Click <ph id="1" dataRef="d1"/> to continue. Then stop.')
-    assert result[0] == "Click {#1} to continue."
+    """An XLIFF 2.1 segment as the Format Service hands it over (04 §2.1): <ph/> is an inline code.
+    The text after it was labelled markup and dropped ("Click {#1} .")."""
+    doc = 'Click <ph id="1" dataRef="d1"/> to continue. Then stop.'
+    result = segment(doc)
+    assert [s.text for s in result.segments] == ["Click {#1} to continue.", "Then stop."]
+    assert result.rebuild() == doc
 
 
-@pytest.mark.xfail(strict=True, reason="the words between an inline self-closing element with attributes and the next period are lost")
 def test_text_after_an_inline_image_is_kept():
-    result = texts('<p>Press <b>Start</b> and <img src="i.png" alt="the icon"/> wait. Then go.</p>')
-    assert "wait" in result[0]
+    doc = '<p>Press <b>Start</b> and <img src="i.png" alt="the icon"/> wait. Then go.</p>'
+    result = segment(doc)
+    assert [s.text for s in result.segments][0].endswith("wait.")
+    assert result.rebuild() == doc
 
 
 def test_a_line_break_inside_a_sentence_stays_an_inline_placeholder():

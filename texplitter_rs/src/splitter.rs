@@ -2187,7 +2187,14 @@ impl SegmentTree {
         // (balanced and last_action != 'popRC') else 'SINGLE'`, but it
         // only emits the sublist if `current_sublist` is non-empty.
         if !current_sublist.is_empty() {
-            let label = balanced && last_action != "popRC";
+            // `popRC` marks a self-closing element with attributes; the run
+            // is markup only while it still ends with that element's `/>`.
+            // Text after it ("<ph id="1"/> to continue") is translatable:
+            // labelled markup, it had no node and was dropped.
+            let ends_with_self_closing = current_sublist
+                .last()
+                .map_or(false, |t| TokenClass::of(t) == TokenClass::EndCloseTag);
+            let label = balanced && !(last_action == "popRC" && ends_with_self_closing);
             sublists.push((label, current_sublist));
         }
 
