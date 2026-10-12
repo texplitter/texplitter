@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `segment(..., move_punctuation_after_quotes=True)` and the same option on
+  `Tokenizer`: a period or comma written inside closing quotes, as American
+  English does, moves after them, as Spanish and most other languages write
+  it. Off for a source already in that order.
+- Courtesy titles keep their sentence: `Dr.`, `Jr.`, `Messrs.`, and the
+  Spanish `Sr.`, `Sra.`, `Srta.`, `Dra.`, `Dña.`, `Ud.`, `Uds.`, `Vd.`, `Vds.`.
+- Regression tests from real documents (`tests/test_regressions.py`,
+  `tests/fixtures/`): IRS Publication 17 (2025) chapter 12 in English and
+  Spanish, *Treasure Island* chapters I–III.
+
+### Fixed
+
+- `rebuild()` gives back the document: a sentence break was written both in
+  the sentence before it and in the template (`One.{sp}. Two.`, `Go!!`), and
+  `{sp}` was never turned back into a space.
+- Text after a self-closing element with attributes, as XLIFF writes every
+  inline code (`<ph id="1"/>`), was dropped: `Click <ph/> to continue.` lost
+  "to continue".
+- HTML void elements written without a slash (`<meta charset="utf-8">`,
+  `<img src="...">`, `<hr>`) close themselves; they dropped the text after
+  them. `<link>...</link>` in XML keeps its content.
+- A bare self-closing element between blocks (`<p/>`) no longer makes the
+  rest of the document one segment, and is kept on rebuild.
+- The period-after-quote move no longer runs inside markup: a `title`
+  attribute ending in `.` lost the tag's closing `">` and could panic the
+  splitter. It also moves the comma and covers typographic quotes.
+- No space is added after `¿` and `¡` or before `;` and `=`; the source's
+  spacing is kept, attribute values included.
+- A sentence may start with `¿`, `¡`, an opening quote or a dialogue dash.
+- Tag and attribute names may hold digits, `_`, `:` and `.` (`epub:type`,
+  `xml:lang`), so XHTML and EPUB are read as markup.
+
 ## [0.1.0a0] - Unreleased
 
 Alpha release. **The API is not yet stable and may change in future
