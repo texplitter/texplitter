@@ -77,10 +77,9 @@ def test_text_after_an_inline_image_is_kept():
     assert "wait" in result[0]
 
 
-@pytest.mark.xfail(strict=True, reason="the space after <br/> inside a sentence is lost")
-def test_a_line_break_inside_a_sentence_keeps_the_words_apart():
-    result = texts("<p>Press <br/> and wait. Then go.</p>")
-    assert "Pressand" not in result[0]
+def test_a_line_break_inside_a_sentence_stays_an_inline_placeholder():
+    """90df64e took <br/> out of the text run here ("Pressand wait."); the original library kept it inline."""
+    assert texts("<p>Press <br/> and wait. Then go.</p>") == ["Press {#1} and wait.", "Then go."]
 
 
 @pytest.mark.xfail(strict=True, reason="<img> without a slash is counted as an open element; the paragraph after it is lost")

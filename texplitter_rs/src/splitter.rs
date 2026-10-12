@@ -2116,12 +2116,16 @@ impl SegmentTree {
                 tag_stack.pop();
                 last_action = "popRC";
             }
-            if class == TokenClass::SingleTag && tag_stack.is_empty() {
-                // A bare self-closing element (`<p/>`, `<span/>`) outside any
-                // open element is markup of its own: it closes the text run
-                // before it and is emitted alone, as a self-closing element
-                // with attributes is. Left in the run, it made the text and
-                // every block after it one translatable segment.
+            // A bare self-closing element (`<p/>`, `<span/>`) between blocks,
+            // with no text collected yet, is markup of its own and is emitted
+            // alone, as a self-closing element with attributes is: left in
+            // the run, it made every block after it one translatable
+            // segment. Inside a text run (`Press <br/> and wait.`) it stays
+            // the protected inline node it is meant to be.
+            let no_text_yet = current_sublist
+                .iter()
+                .all(|t| t["text"].as_str().map_or(true, |text| text.trim().is_empty()));
+            if class == TokenClass::SingleTag && tag_stack.is_empty() && no_text_yet {
                 if !current_sublist.is_empty() {
                     sublists.push((balanced, std::mem::take(&mut current_sublist)));
                 }
