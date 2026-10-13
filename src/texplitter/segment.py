@@ -117,6 +117,52 @@ def _numbered_inline(
     return result, original_data, code_id
 
 
+def _marks_inline(
+    segment_text: str,
+    tokenizer: "Tokenizer",
+    start_id: int = 0,
+) -> Tuple[str, Dict[str, str], int]:
+    """Replace a rule set's inline marks with numbered placeholders, by their
+    token classes rather than by their look: for markup whose marks are not
+    HTML tags (AsciiDoc's ``*bold*``, ``xref:page[label]``, ```code```).
+
+    The segment is tokenized again with the rules that cut it. A paired
+    ``OPEN_BRACKET``/``CLOSE_BRACKET`` becomes ``{#N}...{/#N}``; a
+    ``SINGLE_TAG`` becomes ``{#N}``. ``original_data`` keeps the marks as
+    written, in the shape ``_numbered_inline`` uses, so the rebuild and the
+    XLIFF export are the same.
+    """
+    tokens = tokenizer.tokenize(segment_text)
+    if "".join(t["text"] for t in tokens) != segment_text:
+        raise ValueError(
+            "the segment's tokens do not rebuild it, so its marks cannot be replaced: "
+            f"{segment_text!r}"
+        )
+    original_data: Dict[str, str] = {}
+    code_id = start_id
+    out: List[str] = []
+    open_marks: List[Tuple[int, int]] = []  # (code id, position in out) of each open mark
+    for t in tokens:
+        cls, text = t["token_class"], t["text"]
+        if cls == "OPEN_BRACKET":
+            code_id += 1
+            open_marks.append((code_id, len(out)))
+            out.append(text)  # replaced when its close mark comes
+        elif cls == "CLOSE_BRACKET" and open_marks:
+            pid, at = open_marks.pop()
+            original_data[str(pid)] = out[at] + "..." + text
+            out[at] = f"{{#{pid}}}"
+            out.append(f"{{/#{pid}}}")
+        elif cls == "SINGLE_TAG":
+            code_id += 1
+            original_data[str(code_id)] = text
+            out.append(f"{{#{code_id}}}")
+        else:
+            out.append(text)
+    # An open mark without its close stays as written; its id is not used.
+    return "".join(out), original_data, code_id
+
+
 def _reverse_numbered_inline(text: str, original_data: Dict[str, str]) -> str:
     """Reverse numbered placeholders back to original HTML tags.
 
@@ -124,6 +170,18 @@ def _reverse_numbered_inline(text: str, original_data: Dict[str, str]) -> str:
     and ``{#N}`` (standalone) with the original self-closing tag.
     """
     result = text
+
+    # Standalone {#N} first (a self-closing tag, a protected mark): a pair
+    # that holds one, such as <b><img/></b>, is then an innermost pair.
+    paired = set(re.findall(r'\{/#(\d+)\}', result))
+
+    def _replace_standalone(m: re.Match) -> str:
+        pid = m.group(1)
+        if pid in paired:
+            return m.group(0)
+        return original_data.get(pid, m.group(0))
+
+    result = re.sub(r'\{#(\d+)\}', _replace_standalone, result)
 
     # Replace paired {#N}content{/#N} — innermost first
     while True:
@@ -148,13 +206,6 @@ def _reverse_numbered_inline(text: str, original_data: Dict[str, str]) -> str:
             + open_tag + content + close_tag
             + result[m.end():]
         )
-
-    # Replace standalone {#N} (self-closing tags)
-    def _replace_standalone(m: re.Match) -> str:
-        pid = m.group(1)
-        return original_data.get(pid, m.group(0))
-
-    result = re.sub(r'\{#(\d+)\}', _replace_standalone, result)
 
     return result
 
@@ -850,8 +901,20 @@ def segment(
     merged_original_data: Dict[str, str] = {}
     next_code_id = 0
 
+    # The HTML rule set's marks are tags, replaced by their look; any other
+    # rule set's marks are replaced by their token classes.
+    marks_by_class = ruleset != "default"
+    if marks_by_class:
+        mark_tokenizer = Tokenizer(ruleset, move_punctuation_after_quotes=False)
+
     for idx, seg_text in raw_segments:
-        if inline_format == "xliff":
+        if marks_by_class:
+            fmt_text, seg_original_data, next_code_id = _marks_inline(
+                seg_text, mark_tokenizer, start_id=next_code_id,
+            )
+            if inline_format == "xliff":
+                fmt_text, seg_original_data = _numbered_to_xliff(fmt_text, seg_original_data)
+        elif inline_format == "xliff":
             fmt_text, seg_original_data, next_code_id = _xliff_inline(
                 seg_text, all_attributes, start_id=next_code_id,
             )

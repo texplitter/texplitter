@@ -221,3 +221,26 @@ def test_question_and_exclamation_marks_end_a_sentence_only_before_a_new_one(sou
 
 def test_an_exclamation_before_japanese_text_still_ends_the_sentence():
     assert len(texts("<p>すごい!こんにちは</p>")) == 2
+
+
+# --- a break after wrapped content, and a pair holding a standalone element -----
+
+
+def test_a_break_right_after_a_wrapper_is_written_once_after_it():
+    """The break's text was given to the wrapper's content and written again by the break and by
+    every empty sibling: '<p>. <b>Hello. </b>. . Next</p>'."""
+    doc = "<p><b>Hello</b>. Next</p>"
+    result = segment(doc)
+    assert result.rebuild() == doc
+    assert texts(doc) == ["Hello", "Next"]
+
+
+def test_a_pair_holding_a_self_closing_element_rebuilds():
+    """{#1}{#2}{/#1}: the pair was never matched because its content held a placeholder."""
+    doc = '<p>See <b>the <img src="x.png"/> map</b>. Next</p>'
+    assert segment(doc).rebuild() == doc
+
+
+def test_whitespace_after_the_last_block_is_kept():
+    doc = "<p>A one.</p>\n\n"
+    assert segment(doc).rebuild() == doc

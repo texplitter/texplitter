@@ -61,6 +61,29 @@ const VOID_ELEMENTS: &[&str] = &[
 /// element with a void name whose closing tag follows before its next
 /// opening (`<link>https://...</link>` in RSS and other XML) holds content
 /// and is left as it is.
+/// A bracket mark without its partner is text, not markup: a closing mark with
+/// no open one, and an opening mark never closed, become punctuation, so the
+/// text around them is never lost and a lone `*` or `_` stays as written.
+fn settle_brackets(tokens: &mut [IndexMap<String, Value>]) {
+    let mut open: Vec<usize> = Vec::new();
+    let mut unmatched: Vec<usize> = Vec::new();
+    for i in 0..tokens.len() {
+        match tokens[i]["token_class"].as_str().unwrap_or("") {
+            "OPEN_BRACKET" => open.push(i),
+            "CLOSE_BRACKET" => {
+                if open.pop().is_none() {
+                    unmatched.push(i);
+                }
+            }
+            _ => {}
+        }
+    }
+    unmatched.extend(open);
+    for i in unmatched {
+        tokens[i].insert("token_class".to_string(), Value::String("PUNCTUATION".to_string()));
+    }
+}
+
 fn mark_void_elements(tokens: &mut [IndexMap<String, Value>]) {
     let class_of = |t: &IndexMap<String, Value>| t["token_class"].as_str().unwrap_or("").to_string();
     let name_of = |t: &IndexMap<String, Value>| t["label"].as_str().unwrap_or("").to_ascii_lowercase();
@@ -215,21 +238,11 @@ impl Tokenizer {
         self.move_punctuation_after_quotes = value;
     }
 
-    pub fn tokenize(&mut self, intext: &str) -> Result<Vec<IndexMap<String, Value>>, Box<dyn Error>> {
-        info!("Starting tokenization");
-        let intext = if self.move_punctuation_after_quotes {
-            move_punctuation_after_quotes(intext)
-        } else {
-            intext.to_string()
-        };
-        let mut _position = 0;
-        self.tokens.clear();
-        self.unmatched_tags.clear();
-        self.nesting_errors.clear();
-        self.error = false;
-        let mut tag_stack: Vec<IndexMap<String, Value>> = vec![];
-
-        for result in self.regexc.captures_iter(&intext) {
+    /// The tokens of text, by the rules, in order: each with its class, type, text, label and byte offsets.
+    fn scan(&mut self, intext: &str) -> Result<Vec<IndexMap<String, Value>>, Box<dyn Error>> {
+        let mut tokens = Vec::new();
+        self.symbol_counter.reset();
+        for result in self.regexc.captures_iter(intext) {
             let captures = result?; // Handle potential errors here
             // Structural invariant: `captures_iter` only yields `Ok(captures)`
             // where at least group 0 (the full match) exists, so `get(0)`
@@ -238,7 +251,6 @@ impl Tokenizer {
             let value = whole.as_str();
             let start = whole.start();
             let end = whole.end();
-            _position = end;
 
             let mut token_class = "";
             let mut token_type = "";
@@ -281,11 +293,47 @@ impl Tokenizer {
             token.insert("start".to_string(), Value::Number(start.into()));
             token.insert("end".to_string(), Value::Number(end.into()));
 
-            self.tokens.push(token.clone());
+            tokens.push(token);
         }
+        Ok(tokens)
+    }
+
+    pub fn tokenize(&mut self, intext: &str) -> Result<Vec<IndexMap<String, Value>>, Box<dyn Error>> {
+        info!("Starting tokenization");
+        let intext = if self.move_punctuation_after_quotes {
+            // The move is for prose. A protected token (a code block, a code span,
+            // an attribute line) keeps its bytes: the text is scanned once to find
+            // them, the move is applied to the text between them, and the result
+            // is scanned again.
+            let protected: Vec<(usize, usize)> = self
+                .scan(intext)?
+                .iter()
+                .filter(|t| matches!(t["token_class"].as_str(), Some("BREAK_TEMPLATE") | Some("SINGLE_TAG")))
+                .map(|t| (t["start"].as_u64().unwrap() as usize, t["end"].as_u64().unwrap() as usize))
+                .collect();
+            let mut out = String::with_capacity(intext.len());
+            let mut at = 0;
+            for (start, end) in protected {
+                out.push_str(&move_punctuation_after_quotes(&intext[at..start]));
+                out.push_str(&intext[start..end]);
+                at = end;
+            }
+            out.push_str(&move_punctuation_after_quotes(&intext[at..]));
+            out
+        } else {
+            intext.to_string()
+        };
+        self.tokens = self.scan(&intext)?;
+        self.unmatched_tags.clear();
+        self.nesting_errors.clear();
+        self.error = false;
+        let mut tag_stack: Vec<IndexMap<String, Value>> = vec![];
+
 
         // Void elements first: their end decides how the nesting is read.
         mark_void_elements(&mut self.tokens);
+        // A bracket mark without its partner is text, not markup.
+        settle_brackets(&mut self.tokens);
 
         // Nesting check over the final tokens, in source order.
         let final_tokens = self.tokens.clone();

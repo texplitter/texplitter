@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- The AsciiDoc rule set handles a documentation site (checked byte for byte
+  on the 33 pages of thinkube.org, `kubexlat/experiments/asciidoc-roundtrip`):
+  listing, literal, passthrough and comment blocks are protected whole;
+  `` `code` `` is one protected token; `xref:page[label]` and
+  `link:url[label]` keep their target and translate their label; headings,
+  list markers, block titles, attribute lines, table delimiters and cells,
+  and the blank line between paragraphs are structure; a sentence end right
+  before a structural line keeps its newline. Rules anchored with `^` or `$`
+  carry `(?m:...)`: the tokenizer compiles with `(?sx)`, so without it they
+  matched on the first line only.
+- Inline marks of a rule set other than the HTML one become `{#N}`
+  placeholders by their token classes (`*bold*` → `{#1}bold{/#1}`,
+  `` `code` `` → `{#1}`), so `validate()`, `rebuild()` and `to_xliff()` work
+  the same for every rule set.
+
 - `segment(..., move_punctuation_after_quotes=True)` and the same option on
   `Tokenizer`: a period or comma written inside closing quotes, as American
   English does, moves after them, as Spanish and most other languages write
@@ -21,6 +36,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- A sentence break right after wrapped content (`<p><b>Hello</b>. Next</p>`)
+  was written inside the wrapper and again by the break and by every empty
+  sibling; it is now written once, after the closing mark.
+- A pair holding a self-closing element (`<b><img/></b>`, `*`code`*`) was
+  never rebuilt: standalone placeholders are now reversed first.
+- Whitespace after the last block (a file's final newline) was dropped.
+- An opening bracket mark without its close (`*Playbooks,`) dropped the rest
+  of the document; an unmatched mark is now text, as a lone `*` or `_` is.
+- `move_punctuation_after_quotes` edited the whole document, protected tokens
+  included: a period inside a listing block's JSON moved. It now applies to
+  the text between protected tokens only.
 - `rebuild()` gives back the document: a sentence break was written both in
   the sentence before it and in the template (`One.{sp}. Two.`, `Go!!`), and
   `{sp}` was never turned back into a space.

@@ -729,6 +729,7 @@ impl TreeNode {
                 open: String,
                 close: Option<String>,
                 n: usize,
+                end: String,
             },
             FinalizeBinary {
                 operator: String,
@@ -773,18 +774,20 @@ impl TreeNode {
                                 s.push_str(&trailing);
                                 results.push((s, !end.is_empty()));
                             } else {
-                                results.push((String::new(), false));
+                                // Whitespace only: no segment, but the document's whitespace is kept.
+                                results.push((full_value, false));
                             }
                         } else {
-                            // Same `end` is passed to every child in the old
-                            // recursive code. Children's results are
+                            // The break's operator comes after the group, so only
+                            // the last child may take it. Children's results are
                             // concatenated in source order.
                             let n = node.children.len();
                             work.push(Frame::FinalizeMultipleConcat { n });
-                            for child in node.children.iter().rev() {
+                            for (i, child) in node.children.iter().enumerate().rev() {
+                                let child_end = if i == n - 1 { end.clone() } else { String::new() };
                                 work.push(Frame::Visit {
                                     node: child.as_ref(),
-                                    end: end.clone(),
+                                    end: child_end,
                                 });
                             }
                         }
@@ -819,17 +822,14 @@ impl TreeNode {
                             open: open.clone(),
                             close: close.clone(),
                             n,
+                            end,
                         });
-                        // `end` comes after the node's content, so it is
-                        // passed to the LAST child only. In practice Single
-                        // nodes always have exactly one child in the
-                        // SegmentTree, so this is a no-op — but the
-                        // multi-child shape keeps the walk total.
-                        for (i, child) in node.children.iter().enumerate().rev() {
-                            let child_end = if i == n - 1 { end.clone() } else { String::new() };
+                        // The break's operator comes after the closing mark, so
+                        // no child takes it: the wrapper writes it after `close`.
+                        for child in node.children.iter().rev() {
                             work.push(Frame::Visit {
                                 node: child.as_ref(),
-                                end: child_end,
+                                end: String::new(),
                             });
                         }
                     }
@@ -845,22 +845,24 @@ impl TreeNode {
                             s.push_str(&trailing);
                             results.push((s, !end.is_empty()));
                         } else {
-                            results.push((String::new(), false));
+                            // Whitespace only (a newline after the last block): kept in the template.
+                            results.push((full_value, false));
                         }
                     }
                 },
-                Frame::FinalizeSingle { open, close, n } => {
+                Frame::FinalizeSingle { open, close, n, end } => {
                     let start = results.len() - n;
                     let mut s = open;
-                    let mut absorbed = false;
-                    for (child_str, child_absorbed) in results.drain(start..) {
+                    for (child_str, _) in results.drain(start..) {
                         s.push_str(&child_str);
-                        absorbed = child_absorbed;
                     }
                     if let Some(close) = close {
                         s.push_str(&close);
                     }
-                    results.push((s, absorbed));
+                    // The operator after the wrapper is written here, so the
+                    // break does not write it again.
+                    s.push_str(&end);
+                    results.push((s, !end.is_empty()));
                 }
                 Frame::FinalizeBinary { operator } => {
                     let (right, _) = results.pop().expect("binary right missing");

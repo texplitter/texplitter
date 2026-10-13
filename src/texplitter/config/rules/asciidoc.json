@@ -1,81 +1,97 @@
 [
     {
-        "type": "asciidoc_comment_block",
-        "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc comment block delimiters (four or more forward slashes on their own line).",
-        "regex": "^/{4,}\\s*$  # Four or more slashes as block delimiter\n",
-        "callback": "default_callback",
-        "sample": "////"
-    },
-    {
-        "type": "asciidoc_section_title",
-        "class": "BREAK",
-        "description": "Matches AsciiDoc section titles (= Title through ===== Title). The equal signs at the start of a line define the heading level.",
-        "regex": "^={1,5}  # One to five equal signs at the start of a line\n\\s+      # Followed by one or more spaces\n",
-        "callback": "default_callback",
-        "sample": "== Section Title"
-    },
-    {
         "type": "asciidoc_listing_block",
         "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc listing block delimiters (four or more hyphens on their own line).",
-        "regex": "^-{4,}\\s*$  # Four or more hyphens as listing block delimiter\n",
+        "description": "Matches a whole AsciiDoc listing block, its delimiter lines included: its content is listing and is never translated.",
+        "regex": "(?m:^-{4,}[\\x20\\t]*$.*?^-{4,}[\\x20\\t]*$)  # The whole block, delimiter line to delimiter line; (?m) so ^ and $ are line ends, (?s) is global so . crosses lines, lazy so it stops at the first closing delimiter\n",
         "callback": "default_callback",
-        "sample": "----"
-    },
-    {
-        "type": "asciidoc_sidebar_block",
-        "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc sidebar block delimiters (four or more asterisks on their own line).",
-        "regex": "^\\*{4,}\\s*$  # Four or more asterisks as sidebar block delimiter\n",
-        "callback": "default_callback",
-        "sample": "****"
-    },
-    {
-        "type": "asciidoc_example_block",
-        "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc example block delimiters (four or more equal signs on their own line).",
-        "regex": "^={4,}\\s*$  # Four or more equal signs as example block delimiter\n",
-        "callback": "default_callback",
-        "sample": "===="
-    },
-    {
-        "type": "asciidoc_passthrough_block",
-        "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc passthrough block delimiters (four or more plus signs on their own line).",
-        "regex": "^\\+{4,}\\s*$  # Four or more plus signs as passthrough block delimiter\n",
-        "callback": "default_callback",
-        "sample": "++++"
+        "sample": "----\nkubectl get pods\n----"
     },
     {
         "type": "asciidoc_literal_block",
         "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc literal block delimiters (four or more dots on their own line).",
-        "regex": "^\\.{4,}\\s*$  # Four or more dots as literal block delimiter\n",
+        "description": "Matches a whole AsciiDoc literal block, its delimiter lines included: its content is literal and is never translated.",
+        "regex": "(?m:^\\.{4,}[\\x20\\t]*$.*?^\\.{4,}[\\x20\\t]*$)  # The whole block, delimiter line to delimiter line; (?m) so ^ and $ are line ends, (?s) is global so . crosses lines, lazy so it stops at the first closing delimiter\n",
         "callback": "default_callback",
-        "sample": "...."
+        "sample": "....\nraw text\n...."
     },
     {
-        "type": "asciidoc_thematic_break",
-        "class": "BREAK",
-        "description": "Matches AsciiDoc thematic break (three single quotes on their own line).",
-        "regex": "^'{3}\\s*$  # Three single quotes as thematic break\n",
+        "type": "asciidoc_passthrough_block",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches a whole AsciiDoc passthrough block, its delimiter lines included: its content is passthrough and is never translated.",
+        "regex": "(?m:^\\+{4,}[\\x20\\t]*$.*?^\\+{4,}[\\x20\\t]*$)  # The whole block, delimiter line to delimiter line; (?m) so ^ and $ are line ends, (?s) is global so . crosses lines, lazy so it stops at the first closing delimiter\n",
         "callback": "default_callback",
-        "sample": "'''"
+        "sample": "++++\n<b>raw</b>\n++++"
     },
     {
-        "type": "asciidoc_page_break",
-        "class": "BREAK",
-        "description": "Matches AsciiDoc page break (three or more less-than signs on their own line).",
-        "regex": "^<{3,}\\s*$  # Three or more less-than signs as page break\n",
+        "type": "asciidoc_comment_block",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches a whole AsciiDoc comment block, its delimiter lines included: its content is comment and is never translated.",
+        "regex": "(?m:^/{4,}[\\x20\\t]*$.*?^/{4,}[\\x20\\t]*$)  # The whole block, delimiter line to delimiter line; (?m) so ^ and $ are line ends, (?s) is global so . crosses lines, lazy so it stops at the first closing delimiter\n",
         "callback": "default_callback",
-        "sample": "<<<"
+        "sample": "////\nnot shown\n////"
+    },
+    {
+        "type": "asciidoc_example_block",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc example (or admonition) block delimiter; the content between two of them is prose.",
+        "regex": "(?m:^={4,}[\\x20\\t]*$)  # Four or more equal signs on their own line\n",
+        "callback": "default_callback",
+        "sample": "===="
+    },
+    {
+        "type": "asciidoc_sidebar_block",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc sidebar block delimiter; the content between two of them is prose.",
+        "regex": "(?m:^\\*{4,}[\\x20\\t]*$)  # Four or more asterisks on their own line\n",
+        "callback": "default_callback",
+        "sample": "****"
+    },
+    {
+        "type": "asciidoc_table_delimiter",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc table delimiter; the cells between two of them are prose.",
+        "regex": "(?m:^\\|={3,}[\\x20\\t]*$)  # |=== on its own line\n",
+        "callback": "default_callback",
+        "sample": "|==="
+    },
+    {
+        "type": "asciidoc_section_title",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches the marker of an AsciiDoc section title (= Title through ===== Title); the title text is translatable.",
+        "regex": "(?m:^={1,5}[\\x20\\t]+)  # One to five equal signs at the start of a line, then spaces; the title follows\n",
+        "callback": "default_callback",
+        "sample": "== Section Title"
+    },
+    {
+        "type": "asciidoc_attribute_entry",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc document attribute entry (:attribute-name: value), kept as it is.",
+        "regex": "(?m:^:[a-zA-Z0-9_-]+!?:[^\\n]*$)  # :name: value, or :name!: \n",
+        "callback": "default_callback",
+        "sample": ":toc: left"
+    },
+    {
+        "type": "asciidoc_block_attributes",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc block attribute line ([source,yaml], [cols=...], [NOTE], [.role]), kept as it is.",
+        "regex": "(?m:^\\[[^\\]\\n]*\\][\\x20\\t]*$)  # [source,yaml], [cols=\"1,2\"], [NOTE], [%header], [.role] on their own line\n",
+        "callback": "default_callback",
+        "sample": "[source,yaml]"
+    },
+    {
+        "type": "asciidoc_comment_line",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc comment line, kept as it is.",
+        "regex": "(?m:^//[^\\n]*$)  # A line starting with //; a URL's // is never at a line start\n",
+        "callback": "default_callback",
+        "sample": "// a comment"
     },
     {
         "type": "asciidoc_conditional_directive",
         "class": "BREAK_TEMPLATE",
         "description": "Matches AsciiDoc conditional directives (ifdef, ifndef, ifeval, endif).",
-        "regex": "(ifdef|ifndef|ifeval|endif)  # Directive keyword\n::                          # Double colon\n[^\\[]*                      # Optional attribute name(s)\n\\[                          # Opening bracket\n[^\\]]*                      # Optional content\n\\]                          # Closing bracket\n",
+        "regex": "(?m:^(ifdef|ifndef|ifeval|endif)::[^\\[\\n]*\\[[^\\]\\n]*\\])  # ifdef::attr[] and the like\n",
         "callback": "default_callback",
         "sample": "ifdef::backend-html5[]"
     },
@@ -83,177 +99,209 @@
         "type": "asciidoc_include_directive",
         "class": "BREAK_TEMPLATE",
         "description": "Matches AsciiDoc include directives.",
-        "regex": "include::      # Include directive prefix\n[^\\[]+         # File path\n\\[             # Opening bracket\n[^\\]]*         # Optional attributes\n\\]             # Closing bracket\n",
+        "regex": "(?m:^include::[^\\[\\n]+\\[[^\\]\\n]*\\])  # include::file[attrs]\n",
         "callback": "default_callback",
         "sample": "include::chapter1.adoc[leveloffset=+1]"
     },
     {
         "type": "asciidoc_block_image",
         "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc block image macro (image:: on its own line).",
-        "regex": "image::        # Block image macro prefix\n[^\\[]+         # Image path\n\\[             # Opening bracket\n[^\\]]*         # Optional attributes (alt text, dimensions)\n\\]             # Closing bracket\n",
+        "description": "Matches the AsciiDoc block image macro; its alternative text is kept as it is.",
+        "regex": "(?m:^image::[^\\[\\n]+\\[[^\\]\\n]*\\])  # image::file[attrs] on its own line\n",
         "callback": "default_callback",
         "sample": "image::sunset.jpg[Sunset,300,200]"
     },
     {
+        "type": "asciidoc_thematic_break",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc thematic break.",
+        "regex": "(?m:^'{3}[\\x20\\t]*$)  # Three single quotes on their own line\n",
+        "callback": "default_callback",
+        "sample": "'''"
+    },
+    {
+        "type": "asciidoc_page_break",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc page break.",
+        "regex": "(?m:^<{3,}[\\x20\\t]*$)  # Three or more less-than signs on their own line\n",
+        "callback": "default_callback",
+        "sample": "<<<"
+    },
+    {
+        "type": "asciidoc_list_marker",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc list item marker (bulleted, numbered, or hyphen); the item text is translatable.",
+        "regex": "(?m:^[\\x20\\t]*(\\*{1,5}|\\.{1,5}|-)[\\x20\\t]+)  # *, **, ., .., - at the start of a line, then spaces\n",
+        "callback": "default_callback",
+        "sample": "* item"
+    },
+    {
+        "type": "asciidoc_block_title",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches the marker of an AsciiDoc block title (.Title); the title text is translatable.",
+        "regex": "(?m:^\\.(?=[A-Za-z]))  # A dot at the start of a line, before a letter\n",
+        "callback": "default_callback",
+        "sample": ".Title"
+    },
+    {
+        "type": "asciidoc_table_cell",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches an AsciiDoc table cell separator; each cell is translatable.",
+        "regex": "(?m:^[\\x20\\t]*\\|[\\x20\\t]*)|[\\x20\\t]+\\|[\\x20\\t]+  # A cell separator: a bar at the start of a line, or between spaces\n",
+        "callback": "default_callback",
+        "sample": "| cell"
+    },
+    {
         "type": "asciidoc_block_anchor",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc block anchor IDs ([[anchor-id]]).",
-        "regex": "\\[\\[              # Opening double brackets\n[a-zA-Z0-9_-]+   # Anchor ID\n\\]\\]              # Closing double brackets\n",
+        "description": "Matches an AsciiDoc anchor ([[anchor-id]]).",
+        "regex": "\\[\\[[a-zA-Z0-9_-]+\\]\\]  # [[anchor-id]]\n",
         "callback": "symbol_callback",
         "sample": "[[section-overview]]"
     },
     {
-        "type": "asciidoc_attribute_entry",
-        "class": "BREAK_TEMPLATE",
-        "description": "Matches AsciiDoc document attribute entries (:attribute-name: value).",
-        "regex": "^:               # Leading colon at start of line\n[a-zA-Z0-9_-]+  # Attribute name\n!?:             # Optional negation + closing colon\n[^\\n]*          # Optional value (rest of line)\n",
-        "callback": "default_callback",
-        "sample": ":toc: left"
-    },
-    {
         "type": "asciidoc_attribute_ref",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc attribute references ({attribute-name}). Consumes optional leading whitespace to win over the generic curly-bracket punctuation rule.",
-        "regex": "\\s*               # Optional leading whitespace\n\\{                # Opening curly brace\n[a-zA-Z0-9_-]+   # Attribute name\n\\}                # Closing curly brace\n\\s*               # Optional trailing whitespace\n",
+        "description": "Matches an AsciiDoc attribute reference ({attribute-name}).",
+        "regex": "\\{[a-zA-Z0-9_-]+\\}  # {attribute-name}\n",
         "callback": "symbol_callback",
         "sample": "{product-name}"
     },
     {
-        "type": "asciidoc_xref",
+        "type": "asciidoc_anchor_xref",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc cross-references (<<anchor>> or <<anchor,display text>>).",
-        "regex": "<<               # Opening double angle brackets\n[^,>]+           # Anchor ID\n(,[^>]+)?        # Optional comma and display text\n>>               # Closing double angle brackets\n",
+        "description": "Matches an AsciiDoc cross-reference to an anchor (<<anchor>> or <<anchor,display text>>).",
+        "regex": "<<[^,>\\n]+(,[^>\\n]+)?>>  # <<anchor>> or <<anchor,text>>\n",
         "callback": "symbol_callback",
         "sample": "<<section-overview,See Overview>>"
     },
     {
-        "type": "asciidoc_inline_macro",
+        "type": "asciidoc_monospace",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc inline macros (link:url[text], mailto:addr[text], btn:[Label], kbd:[Key]).",
-        "regex": "(link|mailto|btn|kbd|menu|pass|stem|latexmath|asciimath)  # Macro name\n:                        # Single colon\n[^\\[]*                   # Target (URL, address, etc.)\n\\[                       # Opening bracket\n[^\\]]*                   # Macro content\n\\]                       # Closing bracket\n",
+        "description": "Matches AsciiDoc monospace text (`code`), kept as it is: a command or a name is not translated.",
+        "regex": "`[^`\\n]+`  # Text in backticks: code, a command, a file name\n",
         "callback": "symbol_callback",
-        "sample": "link:https://example.com[Example]"
+        "sample": "`kubectl`"
+    },
+    {
+        "type": "asciidoc_passthrough",
+        "class": "SINGLE_TAG",
+        "description": "Matches AsciiDoc inline passthrough text (+text+), kept as it is.",
+        "regex": "(?<![\\w+])\\+[^+\\s][^+\\n]*\\+(?![\\w+])  # +text+, not a + between words\n",
+        "callback": "symbol_callback",
+        "sample": "+{raw}+"
     },
     {
         "type": "asciidoc_footnote",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc footnote macros (footnote:[text] or footnoteref:[id,text]).",
-        "regex": "footnote(ref)?   # footnote or footnoteref\n:\\[              # Colon and opening bracket\n[^\\]]*           # Footnote content\n\\]               # Closing bracket\n",
+        "description": "Matches AsciiDoc footnote macros.",
+        "regex": "footnote(ref)?:\\[[^\\]\\n]*\\]  # footnote:[text]\n",
         "callback": "symbol_callback",
         "sample": "footnote:[This is a footnote.]"
     },
     {
-        "type": "asciidoc_bold",
-        "class": "OPEN_BRACKET",
-        "description": "Matches AsciiDoc bold opening marker: optional whitespace followed by * before a non-space character.",
-        "regex": "\\s*            # Optional leading whitespace\n\\*             # Bold marker\n(?=\\S)         # Followed by non-whitespace (the content)\n",
-        "callback": "default_callback",
-        "sample": " *bold"
-    },
-    {
-        "type": "asciidoc_bold_close",
-        "class": "CLOSE_BRACKET",
-        "description": "Matches AsciiDoc bold closing marker: * after a non-space, followed by whitespace, punctuation, or end.",
-        "regex": "(?<=\\S)        # Preceded by non-whitespace (the content)\n\\*             # Bold marker\n(?=\\s|[.,;:!?\\)\\]]|$)  # Followed by whitespace, punctuation, or end\n",
-        "callback": "default_callback",
-        "sample": "bold* "
-    },
-    {
-        "type": "asciidoc_italic",
-        "class": "OPEN_BRACKET",
-        "description": "Matches AsciiDoc italic opening marker: optional whitespace followed by _ before a non-space character.",
-        "regex": "\\s*            # Optional leading whitespace\n_              # Italic marker\n(?=\\S)         # Followed by non-whitespace\n",
-        "callback": "default_callback",
-        "sample": " _italic"
-    },
-    {
-        "type": "asciidoc_italic_close",
-        "class": "CLOSE_BRACKET",
-        "description": "Matches AsciiDoc italic closing marker: _ after a non-space, followed by whitespace, punctuation, or end.",
-        "regex": "(?<=\\S)        # Preceded by non-whitespace\n_              # Italic marker\n(?=\\s|[.,;:!?\\)\\]]|$)  # Followed by whitespace, punctuation, or end\n",
-        "callback": "default_callback",
-        "sample": "italic_ "
-    },
-    {
-        "type": "asciidoc_monospace",
-        "class": "OPEN_BRACKET",
-        "description": "Matches AsciiDoc monospace opening marker: optional whitespace followed by ` before a non-space character.",
-        "regex": "\\s*            # Optional leading whitespace\n`              # Monospace marker\n(?=\\S)         # Followed by non-whitespace\n",
-        "callback": "default_callback",
-        "sample": " `code"
-    },
-    {
-        "type": "asciidoc_monospace_close",
-        "class": "CLOSE_BRACKET",
-        "description": "Matches AsciiDoc monospace closing marker: ` after a non-space, followed by whitespace, punctuation, or end.",
-        "regex": "(?<=\\S)        # Preceded by non-whitespace\n`              # Monospace marker\n(?=\\s|[.,;:!?\\)\\]]|$)  # Followed by whitespace, punctuation, or end\n",
-        "callback": "default_callback",
-        "sample": "code` "
-    },
-    {
-        "type": "asciidoc_highlight",
-        "class": "OPEN_BRACKET",
-        "description": "Matches AsciiDoc highlight opening marker: optional whitespace followed by # before a non-space character.",
-        "regex": "\\s*            # Optional leading whitespace\n\\#             # Highlight marker\n(?=\\S)         # Followed by non-whitespace\n",
-        "callback": "default_callback",
-        "sample": " #marked"
-    },
-    {
-        "type": "asciidoc_highlight_close",
-        "class": "CLOSE_BRACKET",
-        "description": "Matches AsciiDoc highlight closing marker: # after a non-space, followed by whitespace, punctuation, or end.",
-        "regex": "(?<=\\S)        # Preceded by non-whitespace\n\\#             # Highlight marker\n(?=\\s|[.,;:!?\\)\\]]|$)  # Followed by whitespace, punctuation, or end\n",
-        "callback": "default_callback",
-        "sample": "marked# "
-    },
-    {
-        "type": "asciidoc_superscript",
+        "type": "asciidoc_inline_macro",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc superscript (^text^).",
-        "regex": "\\^         # Opening caret\n[^\\^]+     # Content (no carets)\n\\^         # Closing caret\n",
-        "callback": "default_callback",
-        "sample": "^super^"
-    },
-    {
-        "type": "asciidoc_subscript",
-        "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc subscript (~text~).",
-        "regex": "~          # Opening tilde\n[^~]+      # Content (no tildes)\n~          # Closing tilde\n",
-        "callback": "default_callback",
-        "sample": "~sub~"
-    },
-    {
-        "type": "asciidoc_list_marker",
-        "class": "BREAK",
-        "description": "Matches AsciiDoc list item markers: unordered (*, **, ***), ordered (., .., ...), and description term (term::).",
-        "regex": "^(\\*{1,5}|\\.{1,5})  # One to five asterisks or dots at start of line\n\\s+                  # Followed by whitespace\n",
-        "callback": "default_callback",
-        "sample": "* List item"
+        "description": "Matches AsciiDoc inline macros whose content is not prose (kbd:[Ctrl+C], image:file[], mailto:…).",
+        "regex": "(mailto|btn|kbd|menu|pass|stem|latexmath|asciimath|image|icon):[^\\[\\s]*\\[[^\\]\\n]*\\]  # macro:target[content], kept whole\n",
+        "callback": "symbol_callback",
+        "sample": "kbd:[Ctrl+C]"
     },
     {
         "type": "asciidoc_callout",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc callout markers (<1>, <2>, etc.).",
-        "regex": "<          # Opening angle bracket\n\\d+        # One or more digits\n>          # Closing angle bracket\n",
+        "description": "Matches an AsciiDoc callout marker.",
+        "regex": "<\\d+>  # <1>\n",
         "callback": "symbol_callback",
         "sample": "<1>"
     },
     {
-        "type": "asciidoc_block_title",
-        "class": "BREAK",
-        "description": "Matches AsciiDoc block title prefix (a single dot followed by text at start of line).",
-        "regex": "^\\.        # Single dot at start of line\n(?=[A-Za-z])  # Followed by a letter (not another dot)\n",
+        "type": "asciidoc_superscript",
+        "class": "SINGLE_TAG",
+        "description": "Matches AsciiDoc superscript.",
+        "regex": "\\^[^\\^\\s]+\\^  # ^text^\n",
         "callback": "default_callback",
-        "sample": ".Block Title"
+        "sample": "^2^"
     },
     {
-        "type": "asciidoc_role",
+        "type": "asciidoc_subscript",
         "class": "SINGLE_TAG",
-        "description": "Matches AsciiDoc role/option blocks ([.role] or [source,python]).",
-        "regex": "^\\[                  # Opening bracket at start of line\n[^\\]]+               # Content (options, roles, source language)\n\\]\\s*$               # Closing bracket, optional trailing whitespace, end of line\n",
-        "callback": "symbol_callback",
-        "sample": "[source,python]"
+        "description": "Matches AsciiDoc subscript.",
+        "regex": "~[^~\\s]+~  # ~text~\n",
+        "callback": "default_callback",
+        "sample": "~2~"
+    },
+    {
+        "type": "asciidoc_link_close",
+        "class": "CLOSE_BRACKET",
+        "description": "Matches the closing bracket of an AsciiDoc xref or link label.",
+        "regex": "\\]  # The closing bracket of a link label\n",
+        "callback": "default_callback",
+        "sample": "]"
+    },
+    {
+        "type": "asciidoc_link_open",
+        "class": "OPEN_BRACKET",
+        "description": "Matches the opening of an AsciiDoc xref or link macro up to its bracket: the target is kept, the label that follows is translatable.",
+        "regex": "(xref|link):[^\\[\\s]+\\[  # xref:page.adoc[ or link:https://…[ ; the label follows\n",
+        "callback": "default_callback",
+        "sample": "xref:page.adoc["
+    },
+    {
+        "type": "asciidoc_bold_close",
+        "class": "CLOSE_BRACKET",
+        "description": "Matches the AsciiDoc bold closing marker.",
+        "regex": "(?<=\\S)\\*(?=\\s|[.,;:!?\\)\\]]|$)  # Bold closing marker\n",
+        "callback": "default_callback",
+        "sample": "bold*"
+    },
+    {
+        "type": "asciidoc_bold",
+        "class": "OPEN_BRACKET",
+        "description": "Matches the AsciiDoc bold opening marker.",
+        "regex": "(?<![\\w\\*])\\*(?=[^\\s\\*])  # Bold opening marker: not after a word or another *, before a character\n",
+        "callback": "default_callback",
+        "sample": "*bold"
+    },
+    {
+        "type": "asciidoc_italic_close",
+        "class": "CLOSE_BRACKET",
+        "description": "Matches the AsciiDoc italic closing marker.",
+        "regex": "(?<=\\S)_(?=\\s|[.,;:!?\\)\\]]|$)  # Italic closing marker\n",
+        "callback": "default_callback",
+        "sample": "italic_"
+    },
+    {
+        "type": "asciidoc_italic",
+        "class": "OPEN_BRACKET",
+        "description": "Matches the AsciiDoc italic opening marker.",
+        "regex": "(?<![\\w_])_(?=[^\\s_])  # Italic opening marker: not after a word or another _, before a character\n",
+        "callback": "default_callback",
+        "sample": "_italic"
+    },
+    {
+        "type": "asciidoc_highlight_close",
+        "class": "CLOSE_BRACKET",
+        "description": "Matches the AsciiDoc highlight closing marker.",
+        "regex": "(?<=\\S)\\#(?=\\s|[.,;:!?\\)\\]]|$)  # Highlight closing marker\n",
+        "callback": "default_callback",
+        "sample": "mark#"
+    },
+    {
+        "type": "asciidoc_highlight",
+        "class": "OPEN_BRACKET",
+        "description": "Matches the AsciiDoc highlight opening marker.",
+        "regex": "(?<![\\w\\#])\\#(?=[^\\s\\#])  # Highlight opening marker\n",
+        "callback": "default_callback",
+        "sample": "#mark"
+    },
+    {
+        "type": "asciidoc_sentence_end_before_structure",
+        "class": "BREAK",
+        "description": "Matches a sentence-final mark at the end of a line that a structural line follows (a blank line, a block delimiter or attribute line, a list item, a table row, a heading, a directive): the mark alone is the break, so the newline stays for the structural rule.",
+        "regex": "(?m:[.!?:](?=[\\x20\\t]*\\n[\\x20\\t]*(?:\\n|[\\[|*.=\\-:/<]|image::|include::|ifn?def::|endif::|$)))  # the mark, looking ahead at the structural line\n",
+        "callback": "default_callback",
+        "sample": "now.\\n[source,yaml]"
     },
     {
         "type": "japanese_dot",
@@ -309,12 +357,12 @@
         "description": "Matches double quote or Unicode quotation marks.",
         "regex": "[\\\"\\p{Pf}\\p{Pi}]  # Match double quote, final punctuation, or initial punctuation\n",
         "callback": "default_callback",
-        "sample": "\u201c"
+        "sample": "“"
     },
     {
         "type": "several_new_line",
-        "class": "BREAK",
-        "description": "Matches two or more consecutive newline characters.",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches two or more newlines: in AsciiDoc the end of a paragraph, kept in the template.",
         "regex": "\\n{2,}  # Match two or more newline characters\n",
         "callback": "default_callback",
         "sample": "\n\nHello World"
@@ -355,7 +403,7 @@
         "type": "capital_word",
         "class": "TRANSLATABLE",
         "description": "Matches a capitalized word (e.g., Alex's).",
-        "regex": "[\\p{Lu}]            # Match an uppercase letter\n[\\p{Ll}]+           # Followed by one or more lowercase letters\n(                   # Start of optional group\n    [\\'\\u2019]           # Match an apostrophe or right single quotation mark\n    \\p{Ll}+         # Followed by one or more lowercase letters\n)*                  # Zero or more occurrences of the optional group\n(?=                 # Positive lookahead for word boundaries or punctuation\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"-]  # Match whitespace, HTML tags, punctuation, or special characters\n    |               # OR\n    [\\.\u3002\uff0e,:;\\\"\u201c\\?!][\\s<&>]  # Match punctuation followed by whitespace or special characters\n    |               # OR\n    [\\.\u3002\uff0e:?\\)]$    # Match punctuation at the end of the string\n    | $             # OR end of string\n)\n",
+        "regex": "[\\p{Lu}]            # Match an uppercase letter\n[\\p{Ll}]+           # Followed by one or more lowercase letters\n(                   # Start of optional group\n    [\\'\\u2019]           # Match an apostrophe or right single quotation mark\n    \\p{Ll}+         # Followed by one or more lowercase letters\n)*                  # Zero or more occurrences of the optional group\n(?=                 # Positive lookahead for word boundaries or punctuation\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"-]  # Match whitespace, HTML tags, punctuation, or special characters\n    |               # OR\n    [\\.。．,:;\\\"“\\?!][\\s<&>]  # Match punctuation followed by whitespace or special characters\n    |               # OR\n    [\\.。．:?\\)]$    # Match punctuation at the end of the string\n    | $             # OR end of string\n)\n",
         "callback": "default_callback",
         "sample": "Alex's"
     },
@@ -363,7 +411,7 @@
         "type": "lowercase_word",
         "class": "TRANSLATABLE",
         "description": "Matches a lowercase word, potentially with apostrophes (e.g., it's).",
-        "regex": "[\\p{Ll}]+                # One or more lowercase letters\n(                        # Start of group for apostrophe and following letters\n    [\\'\\u2019]                # Apostrophe or right single quotation mark\n    \\p{Ll}+              # One or more lowercase letters\n)*                       # Zero or more occurrences of the group\n(?=                      # Positive lookahead to ensure the match is followed by specific characters\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-*_`#]  # Whitespace, punctuation, or specific symbols (incl. AsciiDoc markers)\n    |                    # OR\n    [\\.\u3002\uff0e,:;\\\"\\'\\?!][\\\"\\'\u201c\\s<&>]  # Punctuation followed by specific symbols or whitespace\n    |                    # OR\n    [\\.\u3002\uff0e:?\\)]$         # Punctuation at the end of the string\n    | $                  # End of the string\n)\n",
+        "regex": "[\\p{Ll}]+                # One or more lowercase letters\n(                        # Start of group for apostrophe and following letters\n    [\\'\\u2019]                # Apostrophe or right single quotation mark\n    \\p{Ll}+              # One or more lowercase letters\n)*                       # Zero or more occurrences of the group\n(?=                      # Positive lookahead to ensure the match is followed by specific characters\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-*_`#]  # Whitespace, punctuation, or specific symbols (incl. AsciiDoc markers)\n    |                    # OR\n    [\\.。．,:;\\\"\\'\\?!][\\\"\\'“\\s<&>]  # Punctuation followed by specific symbols or whitespace\n    |                    # OR\n    [\\.。．:?\\)]$         # Punctuation at the end of the string\n    | $                  # End of the string\n)\n",
         "callback": "default_callback",
         "sample": "it's"
     },
@@ -371,7 +419,7 @@
         "type": "uppercase_word",
         "class": "TRANSLATABLE",
         "description": "Matches a sequence of uppercase letters, optionally with apostrophes.",
-        "regex": "[\\p{Lu}]+                # One or more uppercase letters\n(                        # Optional group for apostrophe and lowercase letters\n    [\\'\\u2019]                # Apostrophe or right single quotation mark\n    \\p{Ll}+              # One or more lowercase letters\n)*                       # Zero or more occurrences of the optional group\n(?=                      # Lookahead assertion\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-*_`#]  # Whitespace, punctuation, or special characters (incl. AsciiDoc markers)\n    |                    # OR\n    [\\.\u3002\uff0e,:;\\\"\\'\u201c\\?!][\\\"\\'\u201c\\s<&>]  # Punctuation followed by certain characters\n    |                    # OR\n    [\\.\u3002\uff0e:?\\)]$         # Punctuation at the end of the string\n    | $                  # End of string\n)\n",
+        "regex": "[\\p{Lu}]+                # One or more uppercase letters\n(                        # Optional group for apostrophe and lowercase letters\n    [\\'\\u2019]                # Apostrophe or right single quotation mark\n    \\p{Ll}+              # One or more lowercase letters\n)*                       # Zero or more occurrences of the optional group\n(?=                      # Lookahead assertion\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-*_`#]  # Whitespace, punctuation, or special characters (incl. AsciiDoc markers)\n    |                    # OR\n    [\\.。．,:;\\\"\\'“\\?!][\\\"\\'“\\s<&>]  # Punctuation followed by certain characters\n    |                    # OR\n    [\\.。．:?\\)]$         # Punctuation at the end of the string\n    | $                  # End of string\n)\n",
         "callback": "default_callback",
         "sample": "HELLO"
     },
@@ -379,7 +427,7 @@
         "type": "camel_case_word",
         "class": "TRANSLATABLE",
         "description": "Matches camelCase or mixed-case words.",
-        "regex": "[\\p{Lu}\\p{Ll}]+                # One or more Unicode uppercase or lowercase letters\n(?=                            # Positive lookahead for boundary characters\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-*_`#]  # Whitespace, punctuation, and symbols (incl. AsciiDoc markers)\n    |                          # OR\n    [\\.\u3002\uff0e,:;\\\"\u201c\\?!][\\\"\\'\u201c\\s<&>]  # Punctuation followed by specific characters\n    |                          # OR\n    [\\.\u3002\uff0e:?\\)]$               # Punctuation at the end of the string\n    | $                        # End of string\n)\n",
+        "regex": "[\\p{Lu}\\p{Ll}]+                # One or more Unicode uppercase or lowercase letters\n(?=                            # Positive lookahead for boundary characters\n    [\\?!]{2,}[\\s<&>\\\"\\p{Pf}']  # A run of question or exclamation marks, then a space, a quote or markup\n    |                   # OR\n    [\\?!]{2,}$          # A run of them at the end of the string\n    |                   # OR\n    [\\s</&\\(\\)\\[\\]\\{\\}\\p{Pf}\\p{Pi}\\\"\\'-*_`#]  # Whitespace, punctuation, and symbols (incl. AsciiDoc markers)\n    |                          # OR\n    [\\.。．,:;\\\"“\\?!][\\\"\\'“\\s<&>]  # Punctuation followed by specific characters\n    |                          # OR\n    [\\.。．:?\\)]$               # Punctuation at the end of the string\n    | $                        # End of string\n)\n",
         "callback": "default_callback",
         "sample": "camelCaseWord"
     },
@@ -507,14 +555,14 @@
         "type": "long_dash",
         "class": "PUNCTUATION",
         "description": "Matches an em dash character.",
-        "regex": "\\u2014  # Unicode code point for em dash (\u2014)\n",
+        "regex": "\\u2014  # Unicode code point for em dash (—)\n",
         "callback": "default_callback",
-        "sample": "\u2014"
+        "sample": "—"
     },
     {
         "type": "vertical_bar",
-        "class": "BREAK",
-        "description": "Matches a vertical bar surrounded by whitespace.",
+        "class": "BREAK_TEMPLATE",
+        "description": "Matches a table cell separator between spaces or after a newline, kept in the template.",
         "regex": "\\s      # Match any whitespace character\n\\|      # Match the vertical bar character '|'\n\\s      # Match any whitespace character\n",
         "callback": "default_callback",
         "sample": " | "
@@ -538,10 +586,10 @@
     {
         "type": "close_question",
         "class": "BREAK",
-        "description": "This regular expression matches a run of question or exclamation marks, with any closing quotes after it, where a new sentence or the end of the text follows. A lower-case word after it continues the sentence, as Spanish writes a speech verb after a question or exclamation (RAE: '\u00a1Ya voy! dijo \u00e9l') and English a speech tag after a closing quote ('\"Sir?\" says the doctor').  ",
-        "regex": "[?!]+[\\\"\\p{Pf}']*  # A run of question or exclamation marks, with the closing quotes right after it,\n(?=                 # ending a sentence only where another starts or the text ends:\n    \\s*$            # the end of the string\n    |\n    \\s+[\\p{Lu}\\p{N}\u00bf\u00a1\u2014\\\"\\p{Pi}'<&]  # a space, then a capital, a digit, \u00bf, \u00a1, a dash, an opening quote or markup\n    |\n    [<&]            # markup right after\n    |\n    [\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]  # Japanese or Chinese text\n)\n",
+        "description": "This regular expression matches a run of question or exclamation marks, with any closing quotes after it, where a new sentence or the end of the text follows. A lower-case word after it continues the sentence, as Spanish writes a speech verb after a question or exclamation (RAE: '¡Ya voy! dijo él') and English a speech tag after a closing quote ('\"Sir?\" says the doctor').  ",
+        "regex": "[?!]+[\\\"\\p{Pf}']*  # A run of question or exclamation marks, with the closing quotes right after it,\n(?=                 # ending a sentence only where another starts or the text ends:\n    \\s*$            # the end of the string\n    |\n    \\s+[\\p{Lu}\\p{N}¿¡—\\\"\\p{Pi}'<&]  # a space, then a capital, a digit, ¿, ¡, a dash, an opening quote or markup\n    |\n    [<&]            # markup right after\n    |\n    [\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]  # Japanese or Chinese text\n)\n",
         "callback": "default_callback",
-        "sample": "? \u00bf"
+        "sample": "? ¿"
     },
     {
         "type": "open_question",
@@ -589,6 +637,6 @@
         "description": "Matches any single character not matched by previous rules.",
         "regex": ".    # Match any character except a newline\n",
         "callback": "symbol_callback",
-        "sample": "\u00b7"
+        "sample": "·"
     }
 ]
