@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - A pair holding a self-closing element (`<b><img/></b>`, `*`code`*`) was
   never rebuilt: standalone placeholders are now reversed first.
 - Whitespace after the last block (a file's final newline) was dropped.
+- `validate()` reported a standalone placeholder inside a pair (`{#9}{#10}{/#9}`,
+  bold around a code span) as crossed nesting.
 - An opening bracket mark without its close (`*Playbooks,`) dropped the rest
   of the document; an unmatched mark is now text, as a lone `*` or `_` is.
 - `move_punctuation_after_quotes` edited the whole document, protected tokens

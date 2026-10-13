@@ -589,14 +589,16 @@ class SegmentResult:
                             f"open {{#{pid}}}.",
                 ))
 
-        # Nesting violations: check that paired placeholders don't cross
-        # Scan left to right, track open/close positions
+        # Nesting violations: check that paired placeholders don't cross.
+        # A standalone placeholder ({#10} for a code span inside *bold*) is
+        # not an open mark: only ids paired in the source go on the stack.
         stack: List[str] = []
         for m in re.finditer(r'\{#(\d+)\}|\{/#(\d+)\}', target):
             open_id = m.group(1)
             close_id = m.group(2)
             if open_id:
-                stack.append(open_id)
+                if open_id in src_paired:
+                    stack.append(open_id)
             elif close_id:
                 if stack and stack[-1] == close_id:
                     stack.pop()

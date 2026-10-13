@@ -244,3 +244,16 @@ def test_a_pair_holding_a_self_closing_element_rebuilds():
 def test_whitespace_after_the_last_block_is_kept():
     doc = "<p>A one.</p>\n\n"
     assert segment(doc).rebuild() == doc
+
+
+def test_a_standalone_placeholder_inside_a_pair_validates():
+    """{#9}{#10}{/#9} (bold around a code span) was reported as crossed nesting: the standalone {#10} was
+    taken for an open mark."""
+    result = segment("* *`thinkube.yaml`* describes an app.\n", ruleset="asciidoc")
+    assert result.validate() == []
+    result.segments[0].text = "{#1}{#2}{/#1} describe una aplicación."
+    assert result.validate() == []
+    result.segments[0].text = "{#1}{/#1}{#2} describe una aplicación."
+    assert result.validate() == []  # moved, still whole
+    result.segments[0].text = "{#1}{#2} describe una aplicación."
+    assert [e.code for e in result.validate()] == ["orphan_open"]
