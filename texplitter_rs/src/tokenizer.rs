@@ -131,12 +131,31 @@ fn mark_void_elements(tokens: &mut [IndexMap<String, Value>]) {
 /// between `<` and `>` is touched, quoted attribute values included, so a
 /// tag such as `<p title="Title.">` keeps its closing `">`.
 pub fn move_punctuation_after_quotes(text: &str) -> String {
-    let chars: Vec<char> = text.chars().collect();
+    move_punctuation_after_quotes_outside(text, &[])
+}
+
+/// The move, leaving the byte ranges in `protected` (sorted, disjoint) as
+/// they are. The tag state carries across a protected range, so an entity
+/// inside an attribute value does not make the rest of the tag text.
+pub fn move_punctuation_after_quotes_outside(text: &str, protected: &[(usize, usize)]) -> String {
+    let (chars, offsets): (Vec<char>, Vec<usize>) = text.char_indices().map(|(o, c)| (c, o)).unzip();
     let mut out = String::with_capacity(text.len());
     let mut in_tag = false;
     let mut value_quote: Option<char> = None;
+    let mut next_protected = 0;
     let mut i = 0;
     while i < chars.len() {
+        if let Some(&(start, end)) = protected.get(next_protected) {
+            if offsets[i] >= start {
+                // The protected range, as written; the tag state is untouched.
+                out.push_str(&text[start..end]);
+                while i < chars.len() && offsets[i] < end {
+                    i += 1;
+                }
+                next_protected += 1;
+                continue;
+            }
+        }
         let c = chars[i];
         if in_tag {
             out.push(c);
@@ -311,15 +330,7 @@ impl Tokenizer {
                 .filter(|t| matches!(t["token_class"].as_str(), Some("BREAK_TEMPLATE") | Some("SINGLE_TAG")))
                 .map(|t| (t["start"].as_u64().unwrap() as usize, t["end"].as_u64().unwrap() as usize))
                 .collect();
-            let mut out = String::with_capacity(intext.len());
-            let mut at = 0;
-            for (start, end) in protected {
-                out.push_str(&move_punctuation_after_quotes(&intext[at..start]));
-                out.push_str(&intext[start..end]);
-                at = end;
-            }
-            out.push_str(&move_punctuation_after_quotes(&intext[at..]));
-            out
+            move_punctuation_after_quotes_outside(intext, &protected)
         } else {
             intext.to_string()
         };

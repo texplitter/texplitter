@@ -131,7 +131,7 @@
         "type": "asciidoc_list_marker",
         "class": "BREAK_TEMPLATE",
         "description": "Matches an AsciiDoc list item marker (bulleted, numbered, or hyphen); the item text is translatable.",
-        "regex": "(?m:^[\\x20\\t]*(\\*{1,5}|\\.{1,5}|-)[\\x20\\t]+)  # *, **, ., .., - at the start of a line, then spaces\n",
+        "regex": "(?m:(?:^|\\n)[\\x20\\t]*(\\*{1,5}|\\.{1,5}|-)[\\x20\\t]+)  # *, **, ., .., - at the start of a line, indented or not, then spaces\n",
         "callback": "default_callback",
         "sample": "* item"
     },
@@ -499,7 +499,7 @@
         "type": "open_bracket",
         "class": "PUNCTUATION",
         "description": "Matches optional whitespace followed by an open parenthesis.",
-        "regex": "\\s*    # Zero or more whitespace characters\n\\(     # Open parenthesis\n",
+        "regex": "\\(  # The bracket alone: the whitespace around it is its own token\n",
         "callback": "default_callback",
         "sample": "   ("
     },
@@ -507,7 +507,7 @@
         "type": "close_bracket",
         "class": "PUNCTUATION",
         "description": "Matches a closing parenthesis followed by optional whitespace.",
-        "regex": "\\)      # Closing parenthesis\n\\s*     # Zero or more whitespace characters\n",
+        "regex": "\\)  # The bracket alone: the whitespace around it is its own token\n",
         "callback": "default_callback",
         "sample": ")"
     },
@@ -515,7 +515,7 @@
         "type": "open_square_bracket",
         "class": "PUNCTUATION",
         "description": "Matches optional whitespace followed by an open square bracket.",
-        "regex": "\\s*    # Match zero or more whitespace characters\n\\[     # Match an open square bracket '['\n",
+        "regex": "\\[  # The bracket alone: the whitespace around it is its own token\n",
         "callback": "default_callback",
         "sample": "  ["
     },
@@ -523,7 +523,7 @@
         "type": "close_square_bracket",
         "class": "PUNCTUATION",
         "description": "Matches a closing square bracket followed by optional whitespace.",
-        "regex": "\\]       # Match a closing square bracket\n\\s*      # Match zero or more whitespace characters\n",
+        "regex": "\\]  # The bracket alone: the whitespace around it is its own token\n",
         "callback": "default_callback",
         "sample": "]   "
     },
@@ -531,7 +531,7 @@
         "type": "open_curly_bracket",
         "class": "PUNCTUATION",
         "description": "Matches optional whitespace followed by an opening curly bracket.",
-        "regex": "\\s*    # Match zero or more whitespace characters\n\\{     # Match an opening curly bracket '{'\n",
+        "regex": "\\{  # The bracket alone: the whitespace around it is its own token\n",
         "callback": "default_callback",
         "sample": "    {"
     },
@@ -539,7 +539,7 @@
         "type": "close_curly_bracket",
         "class": "PUNCTUATION",
         "description": "Matches a closing curly bracket followed by optional whitespace.",
-        "regex": "\\}       # Closing curly bracket\n\\s*      # Zero or more whitespace characters\n",
+        "regex": "\\}  # The bracket alone: the whitespace around it is its own token\n",
         "callback": "default_callback",
         "sample": "}"
     },
@@ -547,7 +547,7 @@
         "type": "dash",
         "class": "BREAK",
         "description": "Matches a dash surrounded by whitespace.",
-        "regex": "\\s    # Leading whitespace character\n-     # Dash character\n\\s    # Trailing whitespace character\n",
+        "regex": "[\\x20\\t]-[\\x20\\t]  # A dash between spaces on one line; a dash at a line start is a list marker\n",
         "callback": "default_callback",
         "sample": " - "
     },
