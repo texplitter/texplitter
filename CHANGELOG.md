@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- A segment without a letter or a digit (a table cell holding a dash) is no segment: it stays in the template as written.
 - The generic symbol rule (both rule sets) could end a token with a newline (`a.b\n`), so a blank line after a word with a dot in it (`=== spec.deployment`) was no paragraph break.
 
 ### Added

@@ -266,6 +266,14 @@ def test_a_title_with_a_dot_in_a_word_ends_at_the_blank_line():
     assert result.rebuild() == doc
 
 
+def test_a_cell_with_only_a_dash_is_not_a_segment():
+    """'| —' in a table: nothing to translate, and a model given '—' translates its context instead."""
+    doc = "|===\n| Needs | What\n| — | A dash means none.\n|===\n"
+    result = segment(doc, ruleset="asciidoc")
+    assert [s.text for s in result.segments] == ["Needs", "What", "A dash means none."]
+    assert result.rebuild() == doc
+
+
 def test_a_definition_term_with_a_link():
     doc = "xref:a.adoc[Page]:: what it adds.\n"
     result = segment(doc, ruleset="asciidoc")

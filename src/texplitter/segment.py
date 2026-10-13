@@ -877,6 +877,16 @@ def segment(
     # Generate the template and post-editing segments
     _, template, raw_segments = tree.generate_placeholders_for_segments("")
 
+    # A segment without a letter or a digit (a table cell holding a dash, a lone mark) has nothing to translate:
+    # it stays in the template as written.
+    kept = []
+    for idx, seg_text in raw_segments:
+        if re.search(r"\w", seg_text):
+            kept.append((idx, seg_text))
+        else:
+            template = template.replace(f"%%{idx}%%", seg_text)
+    raw_segments = kept
+
     # Get all attributes from the tree
     all_attributes = tree.get_attributes()
 
