@@ -627,7 +627,7 @@
         "type": "symbol",
         "class": "SYMBOL",
         "description": "Matches symbol-like sequences that don't fit other categories.",
-        "regex": "[^\\s\\(\\)\\[\\]\\{\\}\\\"\\'=<*_`#\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]+  # Start: Exclude specific characters (incl. AsciiDoc markers *_`#)\n[^:\\.\\\"\\'\\)\\(\\{\\}\\[\\]=<*_`#]                                      # End: Exclude specific characters (incl. AsciiDoc markers *_`#)\n(?=[\\s\\(\\)\\[\\]\\\"\\'\\.=<*_`#]|$|\\s+$)                               # Followed by: Specific characters or end of string\n",
+        "regex": "[^\\s\\(\\)\\[\\]\\{\\}\\\"\\'=<*_`#\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]+  # Start: Exclude specific characters (incl. AsciiDoc markers *_`#)\n[^\\s:\\.\\\"\\'\\)\\(\\{\\}\\[\\]=<*_`#]                                      # End: Exclude specific characters (incl. AsciiDoc markers *_`#)\n(?=[\\s\\(\\)\\[\\]\\\"\\'\\.=<*_`#]|$|\\s+$)                               # Followed by: Specific characters or end of string\n",
         "callback": "symbol_callback",
         "sample": "example_string"
     },

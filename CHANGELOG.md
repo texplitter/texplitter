@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The generic symbol rule (both rule sets) could end a token with a newline (`a.b\n`), so a blank line after a word with a dot in it (`=== spec.deployment`) was no paragraph break.
+
 ### Added
 
 - The AsciiDoc rule set handles a documentation site (checked byte for byte

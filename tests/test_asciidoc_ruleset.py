@@ -257,6 +257,15 @@ def test_a_sentence_end_before_a_structural_line_keeps_the_newline():
     assert result.rebuild() == doc
 
 
+def test_a_title_with_a_dot_in_a_word_ends_at_the_blank_line():
+    """'=== spec.deployment' then a paragraph: the symbol rule's last character could be a newline, so the token
+    took one of the two newlines and the blank line was no paragraph break."""
+    doc = "=== spec.deployment\n\nOptional. More.\n"
+    result = segment(doc, ruleset="asciidoc")
+    assert [s.text for s in result.segments] == ["spec.deployment", "Optional.", "More."]
+    assert result.rebuild() == doc
+
+
 def test_a_definition_term_with_a_link():
     doc = "xref:a.adoc[Page]:: what it adds.\n"
     result = segment(doc, ruleset="asciidoc")

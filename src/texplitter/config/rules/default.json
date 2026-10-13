@@ -427,7 +427,7 @@
         "type": "symbol",
         "class": "SYMBOL",
         "description": "This regular expression matches a sequence of characters that: 1. Does not start with any whitespace, parentheses, brackets, braces, quotes, equal sign, or specific Unicode characters (Hiragana, Katakana, Han). 2. Ends with a character that is not a colon, period, quote, parenthesis, brace, bracket, or equal sign. 3. Is followed by either whitespace, parentheses, brackets, quotes, period, equal sign, end of string, or a space at the end of the string.  ",
-        "regex": "[^\\s\\(\\)\\[\\]\\{\\}\\\"\\'=<\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]+  # Start: Exclude specific characters\n[^:\\.\\\"\\'\\)\\(\\{\\}\\[\\]=<]                                      # End: Exclude specific characters\n(?=[\\s\\(\\)\\[\\]\\\"\\'\\.=<]|$|\\s+$)                               # Followed by: Specific characters or end of string\n",
+        "regex": "[^\\s\\(\\)\\[\\]\\{\\}\\\"\\'=<\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]+  # Start: Exclude specific characters\n[^\\s:\\.\\\"\\'\\)\\(\\{\\}\\[\\]=<]                                      # End: Exclude specific characters\n(?=[\\s\\(\\)\\[\\]\\\"\\'\\.=<]|$|\\s+$)                               # Followed by: Specific characters or end of string\n",
         "callback": "symbol_callback",
         "sample": "example_string"
     },
